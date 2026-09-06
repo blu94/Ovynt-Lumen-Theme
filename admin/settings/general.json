@@ -43,7 +43,7 @@
       "ui": {
         "type": "section",
         "cols": 12,
-        "icon": "tabler-clipboard-check"
+        "icon": "tabler-list-check"
       },
       "name": "Sittings",
       "subtitle": "How the exam player behaves. These are read by the theme, not by core.",

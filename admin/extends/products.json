@@ -13,17 +13,17 @@
       "name": "Exam",
       "ui": {
         "type": "tab",
-        "icon": "tabler-certificate"
+        "icon": "tabler-file-certificate"
       },
       "elements": [
         {
           "ui": {
             "type": "section",
             "cols": 12,
-            "icon": "tabler-certificate"
+            "icon": "tabler-file-certificate"
           },
           "name": "Sell This Product As An Exam",
-          "subtitle": "Switch this on and the product becomes an exam: buying it grants a candidate access, and you build its papers and cases from the Papers and Cases screens. Everything commercial stays where it already is — the price, tax, discounts and catalogue listing on the tabs beside this one.",
+          "subtitle": "Switch this on and the product becomes an exam: buying it grants a candidate access, and you add its papers below. Everything commercial stays where it already is — the price, tax, discounts and catalogue listing on the tabs beside this one. Two things to check there: turn Requires Shipping OFF, since an exam has nothing to post and with it off checkout never asks for an address or charges a delivery fee; and set the product Active, or it will not appear in the catalogue however this tab is configured.",
           "elements": [
             {
               "ui": {
@@ -95,10 +95,10 @@
           "ui": {
             "type": "section",
             "cols": 12,
-            "icon": "tabler-file-stack"
+            "icon": "tabler-list-numbers"
           },
           "name": "Papers",
-          "subtitle": "A paper is a timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one has been ended. Build the cases for each paper from the Cases screen.",
+          "subtitle": "A paper is a timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one has been ended. Drag to reorder; that is the order candidates meet them in. Build each paper's cases from the Cases screen.",
           "elements": [
             {
               "ui": {
@@ -238,16 +238,6 @@
               ]
             }
           ]
-        },
-        {
-          "ui": {
-            "type": "section",
-            "cols": 12,
-            "icon": "tabler-info-circle"
-          },
-          "name": "Before It Sells",
-          "subtitle": "Two things are worth checking on the tabs beside this one. Turn Requires Shipping OFF — an exam has nothing to post, and with it off checkout never asks the candidate for an address or charges a delivery fee. And set the product Active, or it will not appear in the catalogue however this tab is configured.",
-          "elements": []
         }
       ]
     }

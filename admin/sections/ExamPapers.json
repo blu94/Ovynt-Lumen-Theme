@@ -3,7 +3,7 @@
   "component": "ExamPapersSection",
   "name": "Exam Papers",
   "description": "One exam's papers for the candidate who has access to it: per-paper state, score once ended, and the action that fits. Reads the exam from the ?e= query parameter, and offers a chooser when none is given.",
-  "ui": { "icon": "tabler-file-stack" },
+  "ui": { "icon": "tabler-list-numbers" },
   "contents": {
     "elements": [
       {

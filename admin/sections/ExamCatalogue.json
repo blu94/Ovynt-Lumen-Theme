@@ -3,7 +3,7 @@
   "component": "ExamCatalogueSection",
   "name": "Exam Catalogue",
   "description": "Lists the exams on sale, with the price from each exam's linked product and a button that reflects whether the reader already has access.",
-  "ui": { "icon": "tabler-certificate" },
+  "ui": { "icon": "tabler-file-certificate" },
   "contents": {
     "elements": [
       {

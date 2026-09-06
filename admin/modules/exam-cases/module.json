@@ -3,7 +3,7 @@
   "type": "exam-cases",
   "routeBase": "module/exam-cases",
   "order": 22,
-  "icon": "tabler-photo-scan",
+  "icon": "tabler-photo",
   "api": "/admin/modules/exam-cases",
   "resource": "modules",
   "table": { "$ref": "index.json" },

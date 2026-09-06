@@ -61,7 +61,7 @@
       ]
     },
     {
-      "ui": { "type": "section", "cols": 12, "icon": "tabler-report-analytics" },
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-chart-bar" },
       "name": "What They Actually Did",
       "subtitle": "One row per paper, straight from the server's own record. This is the evidence for a dispute about a timer or a lost answer — what was recorded, rather than what anybody remembers.",
       "elements": [

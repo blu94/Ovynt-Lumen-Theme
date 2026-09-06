@@ -1,7 +1,7 @@
 {
   "elements": [
     {
-      "ui": { "type": "section", "cols": 12, "icon": "tabler-photo-scan" },
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-photo" },
       "name": "The Images",
       "subtitle": "The study the candidate reports. Upload every image in the order they should be read — a plain film and its lateral are a sequence, not a set. These go to the protected store: they are never served from a public folder and every view is a short-lived signed link.",
       "elements": [
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "ui": { "type": "section", "cols": 12, "icon": "tabler-clipboard-text" },
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-file-text" },
       "name": "The Case",
       "subtitle": "What the candidate reads beside the images.",
       "elements": [

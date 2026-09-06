@@ -6,7 +6,7 @@
       "description": "A candidate was given access to an exam, by purchase or by hand.",
       "audience": "customer",
       "level": "success",
-      "icon": "tabler-certificate",
+      "icon": "tabler-file-certificate",
       "action_url": "/dashboard",
       "placeholders": [
         "exam_title",
