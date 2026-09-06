@@ -126,3 +126,10 @@ Both are recorded in the repository root's `ISSUES-CORE.md`:
 
 Operator guides ship in `docs/` and are served by Ovynt's own Documentation screen:
 `exams.md`, `exam-cases.md`, `enrolments.md`, `storefront-pages.md`.
+
+## Licence
+
+Proprietary. Copyright (c) 2026 Ovynt Labs — see [LICENSE](LICENSE). One production installation
+per licence; no redistribution, resale or derivative works. Third-party components under
+`vendor/` and `node_modules/` keep their own licences. The full licensing model — core, themes,
+free plugins and paid plugins — is in [LICENSING.md](https://github.com/blu94/Ovynt/blob/main/LICENSING.md).

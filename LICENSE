@@ -1,0 +1,115 @@
+Ovynt Proprietary Licence
+Copyright (c) 2026 Ovynt Labs. All rights reserved.
+
+This software and its source code are the property of Ovynt Labs. They are
+made available only under the terms set out below.
+
+THIS IS NOT OPEN SOURCE SOFTWARE. Being able to read the source does not give
+you any right to copy, redistribute or resell it.
+
+--------------------------------------------------------------------------
+1. Licence grant
+--------------------------------------------------------------------------
+
+If you have purchased a valid licence from Ovynt Labs, you are granted a
+non-exclusive, non-transferable, revocable right to:
+
+  a. install and run one (1) production installation of this software per
+     licence purchased; and
+
+  b. keep reasonable additional copies for staging, testing, backup and
+     development, used solely to support that production installation.
+
+If you have not purchased a licence, you have no right to use this software.
+
+--------------------------------------------------------------------------
+2. Source code
+--------------------------------------------------------------------------
+
+The source is supplied in readable form so that you can install, configure,
+audit, extend and self-host your own installation. You may modify your own
+copy for your own use.
+
+That access grants you nothing beyond section 1. In particular it does not
+make this software open source, and it does not permit you to distribute
+your modifications.
+
+--------------------------------------------------------------------------
+3. Restrictions
+--------------------------------------------------------------------------
+
+You may not:
+
+  a. copy, publish, redistribute, sell, rent, lease, sublicense, or otherwise
+     make this software available to any third party, in whole or in part,
+     modified or unmodified;
+
+  b. create, publish or distribute derivative works, forks, ports or
+     rebranded versions of this software;
+
+  c. use this software to provide its functionality to third parties as a
+     hosted or managed service, except for installations you operate for a
+     client who holds their own licence;
+
+  d. remove, obscure or alter any copyright, licence, attribution or
+     ownership notice; or
+
+  e. circumvent, disable, or tamper with any licensing, activation, signing
+     or update mechanism, or assist anyone else in doing so.
+
+--------------------------------------------------------------------------
+4. Ownership
+--------------------------------------------------------------------------
+
+Ovynt Labs retains all right, title and interest in this software, including
+all intellectual property rights. All rights not expressly granted in this
+licence are reserved.
+
+--------------------------------------------------------------------------
+5. Third-party components
+--------------------------------------------------------------------------
+
+This software incorporates third-party components that remain governed by
+their own licences, including the Laravel framework and the other packages
+installed under `vendor/`, and front-end dependencies installed under
+`node_modules/`. Those licences apply to those components only.
+
+Nothing in this licence alters them, and nothing in them grants any right to
+the Ovynt source code.
+
+Some third-party components are supplied under commercial licences held by
+Ovynt Labs which may restrict redistribution. Confirm the terms of any such
+component before distributing this software.
+
+--------------------------------------------------------------------------
+6. Term and termination
+--------------------------------------------------------------------------
+
+This licence applies for as long as you comply with it. It terminates
+automatically and without notice if you breach any term.
+
+On termination you must stop using the software and destroy all copies in
+your possession. Sections 3, 4, 7 and 8 survive termination.
+
+--------------------------------------------------------------------------
+7. No warranty
+--------------------------------------------------------------------------
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NONINFRINGEMENT.
+
+--------------------------------------------------------------------------
+8. Limitation of liability
+--------------------------------------------------------------------------
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL OVYNT
+LABS BE LIABLE FOR ANY CLAIM, DAMAGES, LOSS OF DATA, LOSS OF PROFITS, OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+--------------------------------------------------------------------------
+9. Contact
+--------------------------------------------------------------------------
+
+Licensing enquiries: [ADD CONTACT ADDRESS BEFORE PUBLISHING OR SELLING]
