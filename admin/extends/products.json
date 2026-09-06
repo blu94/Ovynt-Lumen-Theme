@@ -130,7 +130,7 @@
                 }
               ],
               "dialog": {
-                "width": 720,
+                "width": 1000,
                 "create": {
                   "title": "Add Paper",
                   "subtitle": "Its name, and the clock that runs while a candidate sits it."
@@ -143,7 +143,7 @@
                 {
                   "ui": {
                     "type": "field",
-                    "cols": 12
+                    "cols": 8
                   },
                   "key": "title",
                   "type": "text",
@@ -158,52 +158,7 @@
                 {
                   "ui": {
                     "type": "field",
-                    "cols": 12
-                  },
-                  "key": "description",
-                  "type": "textarea",
-                  "label": "Description",
-                  "placeholder": "What this paper covers, shown before the candidate starts it",
-                  "translatable": true
-                },
-                {
-                  "ui": {
-                    "type": "field",
-                    "cols": 6
-                  },
-                  "key": "duration_minutes",
-                  "type": "number",
-                  "label": "Duration (minutes)",
-                  "placeholder": "e.g. 35",
-                  "hint": "The timer that actually runs. Copied onto a sitting when the candidate opens the paper, so changing it later applies to new sittings only — anyone part-way through keeps the time they were given",
-                  "default": 60,
-                  "rules": [
-                    "required",
-                    "integer",
-                    "min:1",
-                    "max:1440"
-                  ]
-                },
-                {
-                  "ui": {
-                    "type": "field",
-                    "cols": 6
-                  },
-                  "key": "case_set_version",
-                  "type": "number",
-                  "label": "Case Set Version",
-                  "hint": "Bump this by hand after materially changing the case list. It records which revision a sitting was served; it never changes what anybody is served, because a sitting always replays from its own frozen copy",
-                  "default": 1,
-                  "rules": [
-                    "required",
-                    "integer",
-                    "min:1"
-                  ]
-                },
-                {
-                  "ui": {
-                    "type": "field",
-                    "cols": 6
+                    "cols": 4
                   },
                   "key": "status",
                   "type": "select",
@@ -229,7 +184,52 @@
                 {
                   "ui": {
                     "type": "field",
-                    "cols": 6
+                    "cols": 12
+                  },
+                  "key": "description",
+                  "type": "textarea",
+                  "label": "Description",
+                  "placeholder": "What this paper covers, shown before the candidate starts it",
+                  "translatable": true
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 4
+                  },
+                  "key": "duration_minutes",
+                  "type": "number",
+                  "label": "Duration (minutes)",
+                  "placeholder": "e.g. 35",
+                  "hint": "The timer that actually runs. Copied onto a sitting when the candidate opens the paper, so changing it later applies to new sittings only — anyone part-way through keeps the time they were given",
+                  "default": 60,
+                  "rules": [
+                    "required",
+                    "integer",
+                    "min:1",
+                    "max:1440"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 4
+                  },
+                  "key": "case_set_version",
+                  "type": "number",
+                  "label": "Case Set Version",
+                  "hint": "Bump this by hand after materially changing the case list. It records which revision a sitting was served; it never changes what anybody is served, because a sitting always replays from its own frozen copy",
+                  "default": 1,
+                  "rules": [
+                    "required",
+                    "integer",
+                    "min:1"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 4
                   },
                   "key": "cases_count",
                   "type": "display",
