@@ -26,7 +26,7 @@ class ExamPaper extends Model
     public $translatable = ['title', 'description'];
 
     protected $fillable = [
-        'exam_id',
+        'product_id',
         'title',
         'slug',
         'description',
@@ -37,15 +37,27 @@ class ExamPaper extends Model
     ];
 
     protected $casts = [
-        'exam_id'          => 'integer',
+        'product_id'       => 'integer',
         'duration_minutes' => 'integer',
         'case_set_version' => 'integer',
         'orders'           => 'integer',
     ];
 
+    /**
+     * The product this paper belongs to — the exam itself.
+     *
+     * There is no `exam_id`: the exam IS the product, so a paper names the product directly
+     * rather than an intermediate row. {@see exam()} reaches the settings beside it.
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Product::class, 'product_id');
+    }
+
+    /** The exam settings for this paper's product — access window, target score. */
     public function exam(): BelongsTo
     {
-        return $this->belongsTo(Exam::class, 'exam_id');
+        return $this->belongsTo(Exam::class, 'product_id', 'product_id');
     }
 
     public function cases(): HasMany

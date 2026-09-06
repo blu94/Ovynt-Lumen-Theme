@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Theme\Backend\Models\CaseAnswer;
 use Theme\Backend\Models\Enrolment;
+use App\Models\Product;
 use Theme\Backend\Models\ExamCase;
 use Theme\Backend\Models\PaperAttempt;
 use Theme\Backend\Support\CurrentCandidate;
@@ -39,13 +40,13 @@ class CandidateDashboard
         $showExpired = (bool) ($data['show_expired'] ?? true);
 
         $enrolments = Enrolment::query()
-            ->with(['exam:id,title,slug,ideal_percent'])
+            ->with(['product:id,title,slug', 'exam'])
             ->where('user_id', $candidate->id)
             ->newestFirst()
             ->get()
             // Only the newest enrolment per exam is the live one; the rest are history and
             // would otherwise show the same exam several times with different windows.
-            ->unique('exam_id')
+            ->unique('product_id')
             ->filter(fn (Enrolment $e) => $showExpired || ! $e->hasExpired())
             ->values();
 
@@ -59,22 +60,22 @@ class CandidateDashboard
             ])->render();
         }
 
-        $examIds = $enrolments->pluck('exam_id')->all();
+        $productIds = $enrolments->pluck('product_id')->all();
 
         // How many cases each exam actually serves, and what they are worth. One grouped query
         // rather than one per card — a dashboard with a dozen exams should not issue a dozen
         // counts.
         $totals = DB::table('lumen_cases')
             ->join('lumen_papers', 'lumen_papers.id', '=', 'lumen_cases.paper_id')
-            ->whereIn('lumen_papers.exam_id', $examIds)
+            ->whereIn('lumen_papers.product_id', $productIds)
             ->whereNull('lumen_cases.deleted_at')
             ->whereNull('lumen_papers.deleted_at')
             ->where('lumen_cases.status', 'active')
             ->where('lumen_papers.status', 'active')
-            ->groupBy('lumen_papers.exam_id')
-            ->selectRaw('lumen_papers.exam_id, count(*) as cases, sum(lumen_cases.score_max) as max_score')
+            ->groupBy('lumen_papers.product_id')
+            ->selectRaw('lumen_papers.product_id, count(*) as cases, sum(lumen_cases.score_max) as max_score')
             ->get()
-            ->keyBy('exam_id');
+            ->keyBy('product_id');
 
         // What the candidate has written and what they have marked, per enrolment.
         $answers = CaseAnswer::query()
@@ -95,7 +96,7 @@ class CandidateDashboard
             ->keyBy('enrolment_id');
 
         $rows = $enrolments->map(function (Enrolment $e) use ($totals, $answers, $ended) {
-            $total    = $totals->get($e->exam_id);
+            $total    = $totals->get($e->product_id);
             $cases    = (int) ($total->cases ?? 0);
             $maxScore = (float) ($total->max_score ?? 0);
             $answered = (int) ($answers->get($e->id)->answered ?? 0);
@@ -109,8 +110,8 @@ class CandidateDashboard
             $progress = ($expired || $cases === 0) ? 0.0 : round(min(100, ($answered / $cases) * 100), 1);
 
             return [
-                'examTitle'  => $e->exam?->getTranslation('title', app()->getLocale(), false) ?? '—',
-                'examSlug'   => $e->exam?->slug,
+                'examTitle'  => $e->product?->getTranslation('title', app()->getLocale(), false) ?? '—',
+                'examSlug'   => $e->product?->slug,
                 'status'     => $expired ? 'expired' : $e->status,
                 'mode'       => $e->mode,
                 'expiresOn'  => $e->expires_at?->toFormattedDateString(),
@@ -120,7 +121,7 @@ class CandidateDashboard
                 'progress'   => $progress,
                 'score'      => $expired ? 0.0 : round($scored, 2),
                 'maxScore'   => round($maxScore, 2),
-                'idealScore' => round($maxScore * ((int) ($e->exam->ideal_percent ?? 60) / 100), 2),
+                'idealScore' => round($maxScore * ((int) ($e->exam?->ideal_percent ?? 60) / 100), 2),
                 'endedPapers'=> (int) ($ended->get($e->id)->ended ?? 0),
                 'expired'    => $expired,
                 // The one action that fits this enrolment's state.

@@ -26,17 +26,20 @@ class ExamCatalogue
 
         $limit = (int) ($data['limit'] ?? 0);
 
-        $exams = Exam::query()
-            ->active()
-            ->ordered()
-            ->when($limit > 0, fn ($q) => $q->limit($limit))
-            ->get();
-
-        // Prices come from the linked products, in one query rather than one per card.
+        // **The exam is the product.** One query over the catalogue, narrowed to products
+        // carrying an exam row that is switched on. Title, price, slug and status all come from
+        // the product itself, so a card cannot disagree with the product page it links to.
         $products = Product::query()
-            ->whereIn('id', $exams->pluck('product_id')->filter()->all())
-            ->get(['id', 'price', 'slug'])
-            ->keyBy('id');
+            ->where('status', 'active')
+            ->whereIn('id', Exam::query()->isExam()->select('product_id'))
+            ->orderBy('orders')->orderBy('id')
+            ->when($limit > 0, fn ($q) => $q->limit($limit))
+            ->get(['id', 'title', 'subtitle', 'description', 'price', 'slug']);
+
+        $exams = Exam::query()
+            ->whereIn('product_id', $products->pluck('id'))
+            ->get()
+            ->keyBy('product_id');
 
         // Which of these the reader already has. Anonymous readers get an empty set and every
         // card reads as "buy" — which is correct, not a degraded state.
@@ -46,42 +49,46 @@ class ExamCatalogue
             ? collect()
             : Enrolment::query()
                 ->where('user_id', $candidateId)
-                ->whereIn('exam_id', $exams->pluck('id'))
+                ->whereIn('product_id', $products->pluck('id'))
                 ->newestFirst()
                 ->get()
-                ->groupBy('exam_id')
+                ->groupBy('product_id')
                 // The newest enrolment is the current one; older rows are history.
                 ->map(fn ($rows) => $rows->first());
 
         $appSettings = app(ApplicationInterface::class)->getSettings();
 
-        $cards = $exams->map(function (Exam $exam) use ($products, $enrolled) {
-            $product   = $exam->product_id ? $products->get($exam->product_id) : null;
-            $enrolment = $enrolled->get($exam->id);
+        $cards = $products->map(function (Product $product) use ($exams, $enrolled) {
+            $exam      = $exams->get($product->id);
+            $enrolment = $enrolled->get($product->id);
 
             // Four states, and each answers a different question for the reader:
             //   open    — they have live access, so the only useful action is to go and sit it
             //   renew   — they had access and it lapsed; buying again is what restores it
             //   buy     — it is for sale and they do not have it
             //   free    — nothing sells it, so there is nothing to buy
+            // Free is the product's own price, not a flag beside it — one figure, so the card
+            // and the checkout cannot disagree.
+            $free = (float) ($product->price ?? 0) <= 0;
+
             $state = match (true) {
                 $enrolment !== null && ! $enrolment->hasExpired() => 'open',
                 $enrolment !== null                               => 'renew',
-                $exam->isFree()                                   => 'free',
+                $free                                             => 'free',
                 default                                           => 'buy',
             };
 
             return [
-                'id'          => $exam->id,
-                'slug'        => $exam->slug,
-                'title'       => $exam->getTranslation('title', app()->getLocale(), false) ?: $exam->slug,
-                'subtitle'    => $exam->getTranslation('subtitle', app()->getLocale(), false),
-                'description' => $exam->getTranslation('description', app()->getLocale(), false),
-                'papers'      => $exam->activePapers()->count(),
-                'accessDays'  => (int) $exam->access_days,
-                'duration'    => $exam->duration_minutes ? (int) $exam->duration_minutes : null,
-                'price'       => $product?->price,
-                'productSlug' => $product?->slug,
+                'id'          => $product->id,
+                'slug'        => $product->slug,
+                'title'       => $product->getTranslation('title', app()->getLocale(), false) ?: $product->slug,
+                'subtitle'    => $product->getTranslation('subtitle', app()->getLocale(), false),
+                'description' => $product->getTranslation('description', app()->getLocale(), false),
+                'papers'      => $exam ? $exam->activePapers()->count() : 0,
+                'accessDays'  => (int) ($exam->access_days ?? 30),
+                'duration'    => ($exam && $exam->duration_minutes) ? (int) $exam->duration_minutes : null,
+                'price'       => $product->price,
+                'productSlug' => $product->slug,
                 'state'       => $state,
                 'expiresOn'   => $enrolment?->expires_at?->toFormattedDateString(),
             ];

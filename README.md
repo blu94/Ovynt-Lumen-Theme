@@ -11,7 +11,7 @@ Vue-CDN conventions.
 
 | Area | State |
 |---|---|
-| Exams, papers, cases — tables, models, repositories, admin screens | Built, verified against a running install |
+| Exams as an Exam tab on Products; papers and cases as their own screens | Built, verified against a running install |
 | Enrolments — staff grant, per-paper progress, guarded edits | Built |
 | Selling access — core product, checkout, enrolment written in the order's transaction | Built |
 | Notifications — access granted, new enrolment | Built |
@@ -46,11 +46,19 @@ Exam        the thing that is bought — access window, target score
 Three tables, all prefixed `lumen_`, plus three for the candidate's side —
 `lumen_enrolments`, `lumen_attempts`, `lumen_answers`.
 
-### An exam carries no price
+### An exam *is* a product
 
-It names a core **product** (`product_id`), and that product's price, tax, discounts and currency
-are what the customer is charged. One figure, so the two can never disagree. An exam with no
-product is free.
+Not a record that names one. The product row is the exam: it carries the title, description,
+price, tax, discounts, catalogue listing and status, and this theme appends an **Exam** tab to
+core's own Products form through `admin/extends/products.json`. Papers, cases and enrolments all
+key on `product_id`; `lumen_exams` holds only the four fields a product has no concept of.
+
+One record, one screen. An earlier version shipped a separate Exams module beside Products, and
+`ModuleExtensionRegistry`'s own docblock describes that shape as "a second top-level module
+describing a product from the outside" and declines to endorse it: *"Neither is a design anyone
+chose; both are what the resolution order left."*
+
+A product priced at zero is a free exam — nothing else is configured.
 
 Buying grants access automatically: `backend/Writers/ExamEnrolmentWriter.php` is declared in
 `manifest.json` as a `checkout.writers` entry and runs **inside the order's transaction**. It
@@ -58,8 +66,9 @@ fails closed — if the enrolment cannot be written the order rolls back and not
 because an order that takes money for access nobody holds is the defect worth refusing a sale to
 prevent.
 
-> This modelling choice — exam as its own record naming a product, versus the product *being* the
-> exam via `admin/extends/` — is deliberate but not settled. See item D5 in the build plan.
+Switching the Exam tab off removes it from the catalogue and stops new enrolments without
+deleting anything: papers, cases and every sitting are kept, and switching it back on restores
+the exam. That is why it is a flag rather than the presence of a row.
 
 ### An attempt is frozen when it opens
 
@@ -115,4 +124,4 @@ Both are recorded in the repository root's `ISSUES-CORE.md`:
 ## Documentation
 
 Operator guides ship in `docs/` and are served by Ovynt's own Documentation screen:
-`exams.md`, `exam-papers.md`, `exam-cases.md`, `enrolments.md`.
+`exams.md`, `exam-papers.md`, `exam-cases.md`, `enrolments.md`, `storefront-pages.md`.

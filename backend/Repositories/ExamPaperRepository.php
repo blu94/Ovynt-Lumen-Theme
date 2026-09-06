@@ -4,6 +4,7 @@ namespace Theme\Backend\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\Product;
 use Theme\Backend\Models\Exam;
 use Theme\Backend\Models\ExamPaper;
 use Theme\Backend\Support\ResolvesListFilters;
@@ -21,7 +22,7 @@ class ExamPaperRepository
     public function baseIndexQuery(array $filters = [])
     {
         $query = ExamPaper::query()
-            ->with(['exam:id,title,slug'])
+            ->with(['product:id,title,slug'])
             ->withCount('cases')
             ->ordered();
 
@@ -30,8 +31,8 @@ class ExamPaperRepository
         }
 
         // How the Exams screen links through to "the papers of this exam".
-        if (($examId = $this->idFilter($filters, 'exam_id')) !== null) {
-            $query->where('exam_id', $examId);
+        if (($productId = $this->idFilter($filters, 'product_id')) !== null) {
+            $query->where('product_id', $productId);
         }
 
         if (($term = $this->searchTerm($filters)) !== null) {
@@ -47,7 +48,7 @@ class ExamPaperRepository
     public function find($id)
     {
         return ExamPaper::query()
-            ->with(['exam:id,title,slug'])
+            ->with(['product:id,title,slug'])
             ->withCount('cases')
             ->findOrFail($id);
     }
@@ -121,13 +122,19 @@ class ExamPaperRepository
                 ['title' => 'Active',   'value' => 'active'],
                 ['title' => 'Inactive', 'value' => 'inactive'],
             ],
-            'exams' => Exam::query()->ordered()->get()->map(fn (Exam $e) => [
-                'title' => $e->getTranslation('title', app()->getLocale(), false) ?: $e->slug,
-                'value' => $e->id,
-            ])->all(),
-            'papers' => ExamPaper::query()->with('exam:id,title')->ordered()->get()->map(function (ExamPaper $p) {
+            // The exams to choose a parent from: products carrying an exam row. Listed by the
+            // PRODUCT's title, because that is the exam's title — there is no second name.
+            'exams' => Product::query()
+                ->whereIn('id', Exam::query()->isExam()->select('product_id'))
+                ->orderBy('orders')->orderBy('id')
+                ->get(['id', 'title', 'slug'])
+                ->map(fn (Product $p) => [
+                    'title' => $p->getTranslation('title', app()->getLocale(), false) ?: $p->slug,
+                    'value' => $p->id,
+                ])->all(),
+            'papers' => ExamPaper::query()->with('product:id,title,slug')->ordered()->get()->map(function (ExamPaper $p) {
                 $paper = $p->getTranslation('title', app()->getLocale(), false) ?: $p->slug;
-                $exam  = $p->exam?->getTranslation('title', app()->getLocale(), false);
+                $exam  = $p->product?->getTranslation('title', app()->getLocale(), false);
 
                 // Papers are named "Paper 1" at every exam, so the picker on the Cases form has
                 // to say which exam's Paper 1 this is or it cannot be used.
@@ -142,20 +149,20 @@ class ExamPaperRepository
     protected function normalise(array $data, ?ExamPaper $existing = null): array
     {
         $out = collect($data)->only([
-            'exam_id', 'title', 'slug', 'description',
+            'product_id', 'title', 'slug', 'description',
             'duration_minutes', 'case_set_version', 'status', 'orders',
         ])->all();
 
-        if (array_key_exists('exam_id', $out)) {
-            $out['exam_id'] = (int) $out['exam_id'];
+        if (array_key_exists('product_id', $out)) {
+            $out['product_id'] = (int) $out['product_id'];
         }
 
-        $examId = $out['exam_id'] ?? $existing?->exam_id;
+        $productId = $out['product_id'] ?? $existing?->product_id;
 
         $out['slug'] = $this->uniqueSlug(
             $out['slug'] ?? null,
             $out['title'] ?? ($existing?->getTranslations('title') ?? []),
-            (int) $examId,
+            (int) $productId,
             $existing
         );
 
@@ -169,7 +176,7 @@ class ExamPaperRepository
      * `/exam/{examSlug}/{paperSlug}` — so the pair is what has to be unique, which is what the
      * migration's compound index says too.
      */
-    protected function uniqueSlug(?string $slug, $title, int $examId, ?ExamPaper $existing): string
+    protected function uniqueSlug(?string $slug, $title, int $productId, ?ExamPaper $existing): string
     {
         $name = is_array($title)
             ? ($title[app()->getLocale()] ?? (count($title) ? reset($title) : ''))
@@ -180,7 +187,7 @@ class ExamPaperRepository
         $n    = 2;
 
         while (ExamPaper::withTrashed()
-            ->where('exam_id', $examId)
+            ->where('product_id', $productId)
             ->where('slug', $try)
             ->when($existing, fn ($q) => $q->whereKeyNot($existing->id))
             ->exists()) {

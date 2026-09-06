@@ -5,107 +5,84 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * The authored side of an exam: what staff write, and what a candidate sits.
+ * The authored side of an exam.
  *
- * Three nested levels, named for what a radiologist calls them rather than for what the
- * source system called them internally:
+ * **An exam is a product.** Not a record that names one — the product row *is* the exam, and
+ * everything here hangs off `product_id`. Core's Products module owns the title, slug,
+ * description, price, tax, status and catalogue presence; this theme appends an *Exam* tab to
+ * that same form through `admin/extends/products.json` and stores what it owns below.
  *
- *   - **Exam** — the thing that is bought. "Rapid Reporting".
- *   - **Paper** — a timed set of cases. The source calls this a "package"; `packages` is far
- *     too generic a table name to put in a shared schema, and "paper" is the word the exam
- *     itself uses.
- *   - **Case** — one set of images with a reporting instruction. The source calls this a
- *     "question" and then labels it "Case 01" everywhere in its own UI, which is the tell.
+ * The alternative — a separate `exams` table with its own identity, listed in its own sidebar
+ * module — is what this theme shipped first. It worked, and it meant two records and two screens
+ * for one thing an operator thinks of as one thing. `ModuleExtensionRegistry`'s own docblock
+ * describes that shape as "a second top-level module describing a product from the outside" and
+ * declines to endorse it: *"Neither is a design anyone chose; both are what the resolution order
+ * left."*
  *
- * **Every table is prefixed `lumen_`.** A theme's migrations run against the same schema as
- * core's and every other installed package's. `exams`, `papers` and `cases` are words another
- * package will want; `lumen_papers` is not.
+ * **No foreign key points into `products`.** A theme is uninstalled by dropping its own tables,
+ * and a constraint reaching into a core table would make that fail on a shop that still has
+ * products. Indexed instead, and existence is checked where it is written — the same rule
+ * Saffron's `outlet_product` follows.
  *
- * **No foreign key points into a core table.** A theme is uninstalled by dropping its own
- * tables, and a constraint reaching into `products` or `users` would make that fail on a shop
- * that still has either. The repositories check existence instead — the same rule Saffron's
- * `outlet_product` migration follows and for the same reason.
+ * These migrations are rewritten rather than superseded: the theme is 0.1.0, unreleased, and no
+ * install carries data. A shipped version would get an additive migration instead.
  */
 return new class extends Migration
 {
     public function up(): void
     {
+        /**
+         * What a product needs in order to *be* an exam.
+         *
+         * One row per product, created the first time the Exam tab is saved. Presence alone does
+         * not make a product an exam — `is_exam` does — so an operator can switch it off without
+         * losing the access window they configured.
+         */
         Schema::create('lumen_exams', function (Blueprint $table) {
             $table->id();
 
-            $table->json('title');
-            $table->string('slug')->unique();
-            $table->json('subtitle')->nullable();
-            $table->json('description')->nullable();
+            // Unique: a product is one exam or none. The uniqueness is the whole reason this is
+            // a settings row rather than an entity — there is nothing here to have two of.
+            $table->unsignedBigInteger('product_id')->unique();
 
-            /**
-             * **The exam does not carry a price, and that is the whole integration.**
-             *
-             * The source puts `price` on the exam and grows its own commercial vocabulary from
-             * it: free when zero, locked when above zero and unpurchased, renewable, discountable.
-             * Ovynt already owns every one of those concepts on `products` — price, tax class,
-             * discounts, currency, the order that proves a purchase — so an exam that carried its
-             * own price would be a second answer to "what does this cost", free to disagree with
-             * the one the customer is actually charged at checkout.
-             *
-             * So an exam names a product and stops there. Selling, pricing, discounting and
-             * refunding stay core's; what an exam is and how long access lasts stay the theme's.
-             *
-             * A null product is a **free exam**: nothing sells it, so nothing has to be bought,
-             * and `ExamEnrolmentWriter` never sees it because it never reaches a checkout.
-             */
-            $table->unsignedBigInteger('product_id')->nullable()->index();
-
-            /**
-             * Display only, and deliberately so. The clock that actually runs belongs to the
-             * paper (see below) — an exam-level duration that governed nothing would be the
-             * kind of setting that looks authoritative and is ignored.
-             */
-            $table->unsignedSmallInteger('duration_minutes')->nullable();
+            $table->boolean('is_exam')->default(false);
 
             /**
              * How long access lasts once a candidate starts, in days. Copied onto each new
              * enrolment as `expires_at`, so changing it later affects future sittings only and
-             * never shortens a window somebody has already been granted.
+             * never shortens a window somebody already holds.
              */
             $table->unsignedSmallInteger('access_days')->default(30);
 
             /**
-             * The percentage of the maximum the candidate is aiming at, shown before they have
-             * a score of their own. 60 is the RCR's own working figure; it is a column rather
-             * than a constant because a different exam board uses a different one.
+             * The percentage of the maximum a candidate is aiming at, shown before they have a
+             * score of their own. 60 is the RCR's working figure; a column rather than a
+             * constant because another board uses a different one.
              */
             $table->unsignedTinyInteger('ideal_percent')->default(60);
 
-            $table->string('status')->default('draft');
-            $table->integer('orders')->default(0);
+            /** Display only. The clock that runs belongs to the paper. */
+            $table->unsignedSmallInteger('duration_minutes')->nullable();
 
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->index(['status', 'orders']);
+            $table->index(['is_exam']);
         });
 
         Schema::create('lumen_papers', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('exam_id')->constrained('lumen_exams')->cascadeOnDelete();
+            // The exam this belongs to, which is a product. No foreign key, per the note above.
+            $table->unsignedBigInteger('product_id')->index();
 
             $table->json('title');
             $table->string('slug')->index();
             $table->json('description')->nullable();
 
-            /**
-             * **This is the clock.** Seeded onto the attempt when a paper is opened and counted
-             * down by the server, never by the browser.
-             */
+            /** **This is the clock.** Seeded onto the attempt when a paper is opened. */
             $table->unsignedSmallInteger('duration_minutes')->default(60);
 
-            /**
-             * Bumped by hand when the case list changes materially. An attempt records the
-             * version it was served, so a finished sitting can say which revision it sat even
-             * though it replays from its own snapshot either way.
-             */
+            /** Bumped by hand when the case list changes materially; recorded on each attempt. */
             $table->unsignedInteger('case_set_version')->default(1);
 
             $table->string('status')->default('active');
@@ -114,10 +91,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // The storefront asks for one paper of one exam by slug; the admin lists a paper's
-            // siblings in order. Both are covered here.
-            $table->unique(['exam_id', 'slug']);
-            $table->index(['exam_id', 'status', 'orders']);
+            // Every exam is allowed a "Paper 1", so the pair is what has to be unique.
+            $table->unique(['product_id', 'slug']);
+            $table->index(['product_id', 'status', 'orders']);
         });
 
         Schema::create('lumen_cases', function (Blueprint $table) {
@@ -126,36 +102,19 @@ return new class extends Migration
             $table->foreignId('paper_id')->constrained('lumen_papers')->cascadeOnDelete();
 
             $table->json('title');
-
-            /** The clinical context the candidate reads before looking at the images. */
             $table->json('brief')->nullable();
-
-            /** What they are being asked to produce — "Report the study." */
             $table->json('instruction')->nullable();
 
             /**
-             * **The model answer is a column here, not a row in the answers table.**
+             * **The model answer is a column here, not a row in the answers table.** A model
+             * answer is authored content belonging to the case; a candidate's report is a
+             * submission belonging to a sitting. Keeping them apart is what lets the answers
+             * table carry a genuine uniqueness constraint.
              *
-             * The source stores it as an `Answer` of type `STANDARD`, in the same table
-             * candidates' own reports live in. That conflates two different things: a model
-             * answer is authored content belonging to the case, written once by staff and
-             * versioned with it; a candidate's report is a submission belonging to a sitting.
-             * They have different owners, different lifetimes and different access rules, and
-             * the only thing they share is being prose.
-             *
-             * Keeping them apart is what lets the answers table carry a genuine uniqueness
-             * constraint — one report per candidate per case — which it could not if staff
-             * content lived in it too.
-             *
-             * It is never included in an attempt snapshot. See the sitting migration.
+             * It is never included in an attempt snapshot — see the sitting migration.
              */
             $table->json('model_answer')->nullable();
 
-            /**
-             * The ceiling a self-mark is validated against, and this case's contribution to the
-             * paper total. Decimal because the RCR's descriptors are whole numbers but half
-             * marks are given in practice.
-             */
             $table->decimal('score_max', 5, 2)->default(5);
 
             $table->string('status')->default('active');

@@ -52,16 +52,16 @@ class ExamPapers
         // Every exam this candidate holds, newest enrolment per exam. The chooser needs it and
         // so does the access check below, so it is fetched once either way.
         $enrolments = Enrolment::query()
-            ->with(['exam:id,title,slug,ideal_percent'])
+            ->with(['product:id,title,slug'])
             ->where('user_id', $candidate->id)
             ->newestFirst()
             ->get()
-            ->unique('exam_id');
+            ->unique('product_id');
 
         $wanted = trim((string) request()->query('e', ''));
 
         $enrolment = $wanted !== ''
-            ? $enrolments->first(fn (Enrolment $e) => $e->exam?->slug === $wanted)
+            ? $enrolments->first(fn (Enrolment $e) => $e->product?->slug === $wanted)
             : ($enrolments->count() === 1 ? $enrolments->first() : null);
 
         if ($enrolment === null) {
@@ -75,13 +75,13 @@ class ExamPapers
             return $view([
                 'state'   => $enrolments->isEmpty() ? 'none' : 'choose',
                 'choices' => $enrolments->map(fn (Enrolment $e) => [
-                    'title' => $e->exam?->getTranslation('title', app()->getLocale(), false) ?? '—',
-                    'slug'  => $e->exam?->slug,
+                    'title' => $e->product?->getTranslation('title', app()->getLocale(), false) ?? '—',
+                    'slug'  => $e->product?->slug,
                 ])->filter(fn ($c) => $c['slug'] !== null)->values()->all(),
             ]);
         }
 
-        $exam = $enrolment->exam;
+        $exam = $enrolment->product;
 
         if ($enrolment->hasExpired()) {
             return $view([
@@ -95,7 +95,7 @@ class ExamPapers
         }
 
         $papers = ExamPaper::query()
-            ->where('exam_id', $enrolment->exam_id)
+            ->where('product_id', $enrolment->product_id)
             ->where('status', 'active')
             ->withCount(['cases' => fn ($q) => $q->where('status', 'active')])
             ->ordered()

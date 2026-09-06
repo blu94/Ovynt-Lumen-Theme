@@ -16,7 +16,6 @@
     ]
   },
   "modules": [
-    "exams",
     "exam-papers",
     "exam-cases",
     "enrolments"

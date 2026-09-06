@@ -21,7 +21,7 @@ class ExamCaseRepository
     public function baseIndexQuery(array $filters = [])
     {
         $query = ExamCase::query()
-            ->with(['paper:id,exam_id,title,slug', 'paper.exam:id,title'])
+            ->with(['paper:id,product_id,title,slug', 'paper.product:id,title'])
             ->ordered();
 
         if (($status = $this->scalarFilter($filters, 'status')) !== null) {
@@ -34,8 +34,8 @@ class ExamCaseRepository
 
         // "Every case in this exam", across its papers — the filter an author actually wants
         // when reviewing a bank before an exam goes live.
-        if (($examId = $this->idFilter($filters, 'exam_id')) !== null) {
-            $query->whereIn('paper_id', ExamPaper::query()->where('exam_id', $examId)->pluck('id'));
+        if (($productId = $this->idFilter($filters, 'product_id')) !== null) {
+            $query->whereIn('paper_id', ExamPaper::query()->where('product_id', $productId)->pluck('id'));
         }
 
         if (($term = $this->searchTerm($filters)) !== null) {
@@ -51,7 +51,7 @@ class ExamCaseRepository
     public function find($id)
     {
         $case = ExamCase::query()
-            ->with(['paper:id,exam_id,title,slug', 'paper.exam:id,title', 'images'])
+            ->with(['paper:id,product_id,title,slug', 'paper.product:id,title', 'images'])
             ->findOrFail($id);
 
         // The form's image field reads `assets`, the same key core's own forms use, so the

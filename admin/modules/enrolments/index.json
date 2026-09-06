@@ -23,7 +23,7 @@
     "elements": [
       {
         "ui": { "type": "field" },
-        "key": "exam_id",
+        "key": "product_id",
         "label": "Exam",
         "placeholder": "Any exam",
         "type": "select",
@@ -41,7 +41,7 @@
   },
   "elements": [
     { "ui": { "type": "display" }, "label": "ID", "key": "id", "sortable": true, "width": "60px" },
-    { "ui": { "type": "display" }, "label": "Exam", "key": "exam.title", "sortable": false, "searchable": true },
+    { "ui": { "type": "display" }, "label": "Exam", "key": "product.title", "sortable": false, "searchable": true },
     { "ui": { "type": "display" }, "label": "Candidate", "key": "user_id", "sortable": false, "searchable": true },
     { "ui": { "type": "display" }, "label": "Mode", "key": "mode", "sortable": false, "align": "center" },
     { "ui": { "type": "display" }, "label": "Expires", "key": "expires_at", "sortable": true, "type": "datetime" },

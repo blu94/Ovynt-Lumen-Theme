@@ -17,7 +17,7 @@
         },
         {
           "ui": { "type": "field", "cols": 6, "autoSelectSingle": false },
-          "key": "exam_id",
+          "key": "product_id",
           "type": "autocomplete",
           "label": "Exam",
           "placeholder": "Which exam?",

@@ -23,7 +23,7 @@
     "elements": [
       {
         "ui": { "type": "field" },
-        "key": "exam_id",
+        "key": "product_id",
         "label": "Exam",
         "placeholder": "Any exam",
         "type": "select",
@@ -57,7 +57,7 @@
     {
       "ui": { "type": "display" },
       "label": "Exam",
-      "key": "exam.title",
+      "key": "product.title",
       "sortable": false
     },
     {

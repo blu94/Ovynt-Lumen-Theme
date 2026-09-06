@@ -39,7 +39,7 @@ class Enrolment extends Model
 
     protected $fillable = [
         'user_id',
-        'exam_id',
+        'product_id',
         'order_id',
         'started_at',
         'expires_at',
@@ -49,15 +49,22 @@ class Enrolment extends Model
 
     protected $casts = [
         'user_id'    => 'integer',
-        'exam_id'    => 'integer',
+        'product_id' => 'integer',
         'order_id'   => 'integer',
         'started_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
 
+    /** The product this grants access to — the exam itself. */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Product::class, 'product_id');
+    }
+
+    /** The exam settings beside it, for the access window and target score. */
     public function exam(): BelongsTo
     {
-        return $this->belongsTo(Exam::class, 'exam_id');
+        return $this->belongsTo(Exam::class, 'product_id', 'product_id');
     }
 
     public function attempts(): HasMany

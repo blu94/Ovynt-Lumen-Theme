@@ -49,8 +49,12 @@ class ExamEnrolmentWriter implements OrderWriter
         // grants access to the exam and says nothing about the mug — a shop is allowed to sell
         // both, and a writer that assumed every line was an exam would be wrong on its first
         // mixed basket.
+        //
+        // `is_exam` is checked, not merely the presence of a row: a product whose Exam tab was
+        // configured and then switched off must not keep granting access to buyers.
         $exams = Exam::query()
             ->whereIn('product_id', $productIds)
+            ->where('is_exam', true)
             ->get();
 
         if ($exams->isEmpty()) {
@@ -94,7 +98,7 @@ class ExamEnrolmentWriter implements OrderWriter
 
         $already = Enrolment::query()
             ->where('user_id', $userId)
-            ->where('exam_id', $exam->id)
+            ->where('product_id', $exam->product_id)
             ->where('order_id', $order->id)
             ->exists();
 
@@ -109,7 +113,7 @@ class ExamEnrolmentWriter implements OrderWriter
 
         $enrolment = Enrolment::create([
             'user_id'    => $userId,
-            'exam_id'    => $exam->id,
+            'product_id' => $exam->product_id,
             'order_id'   => $order->id,
             'started_at' => now(),
             'expires_at' => now()->addDays($days),
@@ -139,7 +143,9 @@ class ExamEnrolmentWriter implements OrderWriter
         $registry = app(NotificationTypeRegistry::class);
         $notifier = app(Notifier::class);
 
-        $title = $exam->getTranslation('title', app()->getLocale(), false) ?: $exam->slug;
+        // The exam's title is the PRODUCT's title — there is no second name to drift from it.
+        $product = $exam->product;
+        $title   = $product?->getTranslation('title', app()->getLocale(), false) ?: ('#' . $exam->product_id);
 
         $notifier->toUser(
             $userId,

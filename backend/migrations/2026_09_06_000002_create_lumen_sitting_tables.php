@@ -23,11 +23,11 @@ return new class extends Migration
         Schema::create('lumen_enrolments', function (Blueprint $table) {
             $table->id();
 
-            // No foreign key into `users` or `orders` — both are core's, and a theme is
+            // No foreign key into `users`, `orders` or `products` — all core's, and a theme is
             // uninstalled by dropping its own tables. Indexed instead, and existence is checked
             // where it is written.
             $table->unsignedBigInteger('user_id')->index();
-            $table->foreignId('exam_id')->constrained('lumen_exams')->cascadeOnDelete();
+            $table->unsignedBigInteger('product_id')->index();
 
             /** Which order granted this, when one did. Null for a free exam or a staff grant. */
             $table->unsignedBigInteger('order_id')->nullable()->index();
@@ -49,7 +49,7 @@ return new class extends Migration
 
             // "The newest enrolment for this candidate on this exam" is the single hottest
             // question in the product — every dashboard card asks it.
-            $table->index(['user_id', 'exam_id', 'id']);
+            $table->index(['user_id', 'product_id', 'id']);
             $table->index(['status', 'expires_at']);
         });
 

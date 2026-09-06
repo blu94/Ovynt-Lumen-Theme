@@ -2,6 +2,7 @@
 
 namespace Theme\Backend\Repositories;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Theme\Backend\Models\CaseAnswer;
@@ -24,15 +25,15 @@ class EnrolmentRepository
     public function baseIndexQuery(array $filters = [])
     {
         $query = Enrolment::query()
-            ->with(['exam:id,title,slug'])
+            ->with(['product:id,title,slug'])
             ->newestFirst();
 
         if (($status = $this->scalarFilter($filters, 'status')) !== null) {
             $query->where('status', $status);
         }
 
-        if (($examId = $this->idFilter($filters, 'exam_id')) !== null) {
-            $query->where('exam_id', $examId);
+        if (($productId = $this->idFilter($filters, 'product_id')) !== null) {
+            $query->where('product_id', $productId);
         }
 
         if (($userId = $this->idFilter($filters, 'user_id')) !== null) {
@@ -52,7 +53,7 @@ class EnrolmentRepository
 
             $query->where(function ($q) use ($userIds, $term) {
                 $q->whereIn('user_id', $userIds)
-                    ->orWhereHas('exam', fn ($e) => $e->where('title', 'like', "%{$term}%"));
+                    ->orWhereHas('product', fn ($e) => $e->where('title', 'like', "%{$term}%"));
             });
         }
 
@@ -61,7 +62,7 @@ class EnrolmentRepository
 
     public function find($id)
     {
-        $enrolment = Enrolment::query()->with(['exam:id,title,slug'])->findOrFail($id);
+        $enrolment = Enrolment::query()->with(['product:id,title,slug'])->findOrFail($id);
 
         // Who this is, resolved for display. Not a relation on the model: `users` is core's
         // table and this theme deliberately holds no foreign key into it, so a candidate whose
@@ -114,10 +115,18 @@ class EnrolmentRepository
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
-            $userId = (int) ($data['user_id'] ?? 0);
-            $examId = (int) ($data['exam_id'] ?? 0);
+            $userId    = (int) ($data['user_id'] ?? 0);
+            $productId = (int) ($data['product_id'] ?? 0);
 
-            $exam = Exam::findOrFail($examId);
+            // The exam is the product, so a grant is checked against a product carrying an exam
+            // row — there is no separate exam record to look up any more.
+            $exam = Exam::query()->where('product_id', $productId)->where('is_exam', true)->first();
+
+            abort_unless(
+                $exam !== null,
+                422,
+                'That product is not an exam, so there is no access to grant. Switch on the Exam tab on the product first.'
+            );
 
             abort_unless(
                 User::query()->whereKey($userId)->exists(),
@@ -132,7 +141,7 @@ class EnrolmentRepository
 
             $enrolment = Enrolment::create([
                 'user_id'    => $userId,
-                'exam_id'    => $examId,
+                'product_id' => $productId,
                 // No order: a hand grant is not a purchase, and recording one would make the
                 // sales figures include something nobody paid for.
                 'order_id'   => null,
@@ -202,10 +211,15 @@ class EnrolmentRepository
                 ['title' => 'Practice', 'value' => Enrolment::MODE_PRACTICE],
                 ['title' => 'Timed',    'value' => Enrolment::MODE_TIMED],
             ],
-            'exams' => Exam::query()->ordered()->get()->map(fn (Exam $e) => [
-                'title' => $e->getTranslation('title', app()->getLocale(), false) ?: $e->slug,
-                'value' => $e->id,
-            ])->all(),
+            // Products that are exams, named by the product's own title.
+            'exams' => Product::query()
+                ->whereIn('id', Exam::query()->isExam()->select('product_id'))
+                ->orderBy('orders')->orderBy('id')
+                ->get(['id', 'title', 'slug'])
+                ->map(fn (Product $p) => [
+                    'title' => $p->getTranslation('title', app()->getLocale(), false) ?: $p->slug,
+                    'value' => $p->id,
+                ])->all(),
         ];
     }
 
