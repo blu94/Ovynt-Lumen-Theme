@@ -120,7 +120,7 @@
                 },
                 {
                   "label": "Cases",
-                  "key": "cases_count",
+                  "key": "cases",
                   "type": "count"
                 },
                 {
@@ -130,7 +130,7 @@
                 }
               ],
               "dialog": {
-                "width": 1000,
+                "width": 1100,
                 "create": {
                   "title": "Add Paper",
                   "subtitle": "Its name, and the clock that runs while a candidate sits it."
@@ -229,11 +229,171 @@
                 {
                   "ui": {
                     "type": "field",
-                    "cols": 4
+                    "cols": 12
                   },
-                  "key": "cases_count",
-                  "type": "display",
-                  "label": "Cases"
+                  "key": "cases",
+                  "type": "repeater",
+                  "label": "Cases",
+                  "itemLabel": "Case",
+                  "columns": [
+                    {
+                      "label": "Case",
+                      "key": "title"
+                    },
+                    {
+                      "label": "Images",
+                      "key": "image_count",
+                      "type": "count"
+                    },
+                    {
+                      "label": "Max Score",
+                      "key": "score_max"
+                    },
+                    {
+                      "label": "Status",
+                      "key": "status",
+                      "type": "status"
+                    }
+                  ],
+                  "dialog": {
+                    "width": 1100,
+                    "create": {
+                      "title": "Add Case",
+                      "subtitle": "The study to report, what the candidate is told, and the answer they will compare against once the paper ends."
+                    },
+                    "update": {
+                      "title": "Edit Case"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 12,
+                        "displayMode": "single"
+                      },
+                      "key": "assets",
+                      "type": "image",
+                      "label": "Case Images",
+                      "hint": "Upload in the order they should be read — a plain film and its lateral are a sequence, not a set. Stored privately: never served from a public folder, and every view is a short-lived signed link",
+                      "rules": [
+                        "nullable",
+                        "array"
+                      ],
+                      "metadata": {
+                        "*.id": [
+                          "required",
+                          "integer",
+                          "exists:assets,id"
+                        ]
+                      },
+                      "dropzoneOptions": {
+                        "usage": "LUMEN_CASE_IMAGE",
+                        "maxFiles": 12,
+                        "acceptedFiles": "image/*",
+                        "protectedDisk": true
+                      }
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 8
+                      },
+                      "key": "title",
+                      "type": "text",
+                      "label": "Case Title",
+                      "placeholder": "e.g. Chest radiograph — 54M, breathless",
+                      "hint": "Staff-facing. Candidates see cases numbered in order, not by title",
+                      "translatable": true,
+                      "rules": [
+                        "required",
+                        "max:180"
+                      ]
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 4
+                      },
+                      "key": "status",
+                      "type": "select",
+                      "label": "Status",
+                      "default": "active",
+                      "hint": "Inactive removes it from new sittings only",
+                      "options": {
+                        "items": [
+                          {
+                            "title": "Active",
+                            "value": "active"
+                          },
+                          {
+                            "title": "Inactive",
+                            "value": "inactive"
+                          }
+                        ]
+                      },
+                      "rules": [
+                        "required"
+                      ]
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 12
+                      },
+                      "key": "brief",
+                      "type": "textarea",
+                      "label": "Clinical Brief",
+                      "placeholder": "e.g. 54-year-old man, three days of breathlessness and pleuritic pain.",
+                      "hint": "The context the candidate is given before looking at the images",
+                      "translatable": true
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 8
+                      },
+                      "key": "instruction",
+                      "type": "text",
+                      "label": "Reporting Instruction",
+                      "placeholder": "e.g. Report this study.",
+                      "hint": "Shown directly above the report box",
+                      "translatable": true,
+                      "rules": [
+                        "nullable",
+                        "max:255"
+                      ]
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 4
+                      },
+                      "key": "score_max",
+                      "type": "number",
+                      "label": "Maximum Score",
+                      "placeholder": "e.g. 5",
+                      "hint": "The ceiling a self-mark is validated against. Half marks allowed",
+                      "default": 5,
+                      "rules": [
+                        "required",
+                        "numeric",
+                        "min:0.5",
+                        "max:100"
+                      ]
+                    },
+                    {
+                      "ui": {
+                        "type": "field",
+                        "cols": 12
+                      },
+                      "key": "model_answer",
+                      "type": "richtext",
+                      "label": "Model Answer",
+                      "hint": "Never sent to the candidate while the paper is open — not withheld by the page, but genuinely absent from what the sitting is served. Read only once they end the paper",
+                      "translatable": true
+                    }
+                  ]
                 }
               ]
             }

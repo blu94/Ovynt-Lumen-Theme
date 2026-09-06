@@ -15,11 +15,9 @@ use Theme\Backend\Models\PaperAttempt;
  * contributes a repeater through (`modifier_groups`). Moving it here removed a top-level module
  * and put the papers where the exam is.
  *
- * **Cases deliberately did not follow.** A repeater can nest — the dialog renders through the
- * generic `Builder`, so a differently-shaped repeater inside one works — but a paper holds ten
- * to forty cases, each with images on the protected disk and a rich-text model answer. Putting
- * those two dialogs deep would carry an entire exam's content in every product save. Cases stay
- * their own screen, filtered by paper.
+ * **Cases nest inside each paper**, two levels deep on the product form. That mirrors the
+ * system this theme is modelled on, where `PackagesDialog.vue` renders `QuestionsTable`
+ * inside itself, so an exam, its papers and their cases are one screen. See ExamCases.
  */
 class ExamPapers
 {
@@ -30,6 +28,8 @@ class ExamPapers
             ->withCount(['cases' => fn ($q) => $q->where('status', 'active')])
             ->ordered()
             ->get();
+
+        $cases = new ExamCases();
 
         return [
             'papers' => $papers->map(fn (ExamPaper $p) => [
@@ -42,7 +42,7 @@ class ExamPapers
                 'duration_minutes' => (int) $p->duration_minutes,
                 'case_set_version' => (int) $p->case_set_version,
                 'status'           => $p->status,
-                'cases_count'      => (int) $p->cases_count,
+                'cases'            => $cases->load($p),
             ])->values()->all(),
         ];
     }
@@ -110,6 +110,13 @@ class ExamPapers
             } else {
                 $payload['slug'] = $this->uniqueSlug($plain, $productId);
                 $paper = ExamPaper::create($payload);
+            }
+
+            // The nested repeater, written once the paper has an id to hang off. Guarded the
+            // same way: a row whose dialog was never opened carries no `cases` key, and reading
+            // that as "this paper has none" would empty it.
+            if (array_key_exists('cases', $row)) {
+                (new ExamCases())->save($paper, is_array($row['cases']) ? $row['cases'] : []);
             }
 
             $keptIds[] = $paper->id;

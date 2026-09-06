@@ -68,7 +68,7 @@ class ExamCase extends Model
      * There is no morph map to register instead, because a theme has no service provider in
      * which to register one.
      *
-     * So `ExamCaseRepository` writes `assetable_type` and `assetable_id` itself, with the real
+     * So `ExamCases` (the Exam tab's handler) writes `assetable_type` and `assetable_id` itself, with the real
      * class name. Reading is ordinary Eloquent: this relation matches on the string that was
      * stored. Recorded as a core defect — any theme-owned model with media meets it.
      */
