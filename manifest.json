@@ -11,6 +11,7 @@
     "settings": "admin/settings/index.json",
     "sections": [
       "admin/sections/ExamCatalogue.json",
+      "admin/sections/ExamPapers.json",
       "admin/sections/CandidateDashboard.json"
     ]
   },

@@ -1,0 +1,54 @@
+{
+  "type": "EXAM_PAPERS_SECTION",
+  "component": "ExamPapersSection",
+  "name": "Exam Papers",
+  "description": "One exam's papers for the candidate who has access to it: per-paper state, score once ended, and the action that fits. Reads the exam from the ?e= query parameter, and offers a chooser when none is given.",
+  "ui": { "icon": "tabler-file-stack" },
+  "contents": {
+    "elements": [
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "chooser_heading",
+        "type": "text",
+        "label": "Chooser Heading",
+        "placeholder": "e.g. Which exam?",
+        "hint": "Shown when the page is opened without naming an exam and the candidate has more than one",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "locked_text",
+        "type": "text",
+        "label": "No-access Message",
+        "placeholder": "e.g. You do not have access to this exam.",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "show_scores",
+        "type": "switch",
+        "label": "Show Scores",
+        "hint": "Scores appear only for papers that have ended, whatever this is set to",
+        "default": true
+      }
+    ]
+  },
+  "settings": {
+    "elements": [
+      {
+        "ui": { "type": "section", "cols": 12 },
+        "name": "General",
+        "elements": [
+          {
+            "ui": { "type": "field", "cols": 6 },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "options": { "items": [ { "title": "Active", "value": "active" }, { "title": "Disabled", "value": "disabled" } ] }
+          }
+        ]
+      }
+    ]
+  }
+}

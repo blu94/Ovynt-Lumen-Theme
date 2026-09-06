@@ -78,6 +78,14 @@ They go to Ovynt's `protected` disk, which nginx never serves; every view is a s
 link. Two known limits, both core's: a link works more than once inside its window, and it does
 not check who is asking. Tracked as `ISSUES-CORE.md` C3.
 
+## Pages the operator must create
+
+Three sections need a Page with an exact slug — `exams`, `exam` and `dashboard` — and nothing
+validates that at install. See [`docs/storefront-pages.md`](docs/storefront-pages.md), which also
+explains why the exam page is `/exam?e={slug}` rather than `/exam/{slug}`: core resolves
+storefront paths through a fixed list no package can extend, and `PathNotResolved` redirects
+rather than renders. Recorded as `ISSUES-CORE.md` C8.
+
 ## Working on it
 
 ```powershell
