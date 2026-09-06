@@ -65,7 +65,7 @@
 
                                 @case('renew')
                                     @if($card['productSlug'])
-                                        <a class="lumen-btn" href="/product/{{ $card['productSlug'] }}">{{ __('Renew access') }}</a>
+                                        <a class="lumen-btn" href="/products/{{ $card['productSlug'] }}">{{ __('Renew access') }}</a>
                                     @endif
                                     <span class="lumen-card__note">{{ __('Your previous access has ended. Everything you wrote is kept.') }}</span>
                                     @break
@@ -76,7 +76,7 @@
 
                                 @default
                                     @if($card['productSlug'])
-                                        <a class="lumen-btn" href="/product/{{ $card['productSlug'] }}">{{ __('View and buy') }}</a>
+                                        <a class="lumen-btn" href="/products/{{ $card['productSlug'] }}">{{ __('View and buy') }}</a>
                                     @else
                                         <span class="lumen-card__note">{{ __('Not on sale yet.') }}</span>
                                     @endif

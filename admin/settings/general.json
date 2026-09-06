@@ -1,15 +1,25 @@
 {
-  "ui": { "type": "tab", "icon": "tabler-settings" },
+  "ui": {
+    "type": "tab",
+    "icon": "tabler-settings"
+  },
   "name": "General",
   "key": "general",
   "elements": [
     {
-      "ui": { "type": "section", "cols": 12, "icon": "tabler-palette" },
+      "ui": {
+        "type": "section",
+        "cols": 12,
+        "icon": "tabler-palette"
+      },
       "name": "Identity",
       "subtitle": "What candidates see across the site.",
       "elements": [
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "site_title",
           "type": "text",
           "label": "Site Title",
@@ -17,7 +27,10 @@
           "default": "Lumen"
         },
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "accent_colour",
           "type": "color",
           "label": "Accent Colour",
@@ -27,12 +40,19 @@
       ]
     },
     {
-      "ui": { "type": "section", "cols": 12, "icon": "tabler-clipboard-check" },
+      "ui": {
+        "type": "section",
+        "cols": 12,
+        "icon": "tabler-clipboard-check"
+      },
       "name": "Sittings",
       "subtitle": "How the exam player behaves. These are read by the theme, not by core.",
       "elements": [
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "allow_practice_mode",
           "type": "switch",
           "label": "Offer Practice Mode",
@@ -40,7 +60,10 @@
           "default": true
         },
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "allow_mode_reversal",
           "type": "switch",
           "label": "Allow Returning to Practice",
@@ -48,22 +71,121 @@
           "default": false
         },
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "progress_ping_seconds",
           "type": "number",
           "label": "Progress Save Interval (seconds)",
           "placeholder": "e.g. 10",
           "hint": "How often the player reports time spent while a paper is open. Lower is more accurate after a browser crash and more chatty",
           "default": 10,
-          "rules": ["nullable", "integer", "min:5", "max:120"]
+          "rules": [
+            "nullable",
+            "integer",
+            "min:5",
+            "max:120"
+          ]
         },
         {
-          "ui": { "type": "field", "cols": 6 },
+          "ui": {
+            "type": "field",
+            "cols": 6
+          },
           "key": "require_all_answered_to_end",
           "type": "switch",
           "label": "Require Every Case Answered Before Ending",
           "hint": "On, a candidate cannot end a paper early with cases left blank. Off, they may end whenever they like — the timer still ends it for them in Timed mode either way",
           "default": true
+        }
+      ]
+    },
+    {
+      "ui": {
+        "type": "section",
+        "cols": 12,
+        "icon": "tabler-menu-2"
+      },
+      "name": "Header Menu",
+      "subtitle": "The links in the site header. Leave the list empty and the theme falls back to a sensible default. Point them at pages you have actually created — nothing validates a URL here, and a wrong one is a 404 with nothing to explain it.",
+      "elements": [
+        {
+          "ui": {
+            "type": "field",
+            "cols": 12
+          },
+          "key": "header_links",
+          "type": "repeater",
+          "label": "Links",
+          "itemLabel": "Link",
+          "columns": [
+            {
+              "label": "Label",
+              "key": "label"
+            },
+            {
+              "label": "URL",
+              "key": "url"
+            },
+            {
+              "label": "Shown",
+              "key": "visible",
+              "type": "boolean"
+            }
+          ],
+          "dialog": {
+            "width": 600,
+            "create": {
+              "title": "Add Link",
+              "subtitle": "Where it goes, and what it says."
+            },
+            "update": {
+              "title": "Edit Link"
+            }
+          },
+          "elements": [
+            {
+              "ui": {
+                "type": "field",
+                "cols": 12
+              },
+              "key": "label",
+              "type": "text",
+              "label": "Label",
+              "placeholder": "e.g. Exams",
+              "translatable": true,
+              "rules": [
+                "required",
+                "max:60"
+              ]
+            },
+            {
+              "ui": {
+                "type": "field",
+                "cols": 12
+              },
+              "key": "url",
+              "type": "text",
+              "label": "URL",
+              "placeholder": "e.g. /exams",
+              "hint": "A path on this site, or a full address for somewhere else",
+              "rules": [
+                "required",
+                "max:255"
+              ]
+            },
+            {
+              "ui": {
+                "type": "field",
+                "cols": 6
+              },
+              "key": "visible",
+              "type": "switch",
+              "label": "Shown",
+              "default": true
+            }
+          ]
         }
       ]
     }
