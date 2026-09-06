@@ -30,7 +30,7 @@ class ExamContributions
     {
         $exam = Exam::query()->where('product_id', $record->getKey())->first();
 
-        return [
+        return (new ExamPapers())->load($record) + [
             'is_exam'               => (bool) ($exam->is_exam ?? false),
             'access_days'           => (int) ($exam->access_days ?? 30),
             'ideal_percent'         => (int) ($exam->ideal_percent ?? 60),
@@ -87,6 +87,10 @@ class ExamContributions
         // A row is written even when the switch is off, so an operator who configures the window
         // first and enables the exam second does not lose what they typed.
         $exam->save();
+
+        // The papers repeater on the same tab. Composed rather than inlined, the way Saffron
+        // splits its own contributions — one class per thing being contributed.
+        (new ExamPapers())->save($record, $values);
     }
 
     private function clamp($value, int $min, int $max, int $fallback): int

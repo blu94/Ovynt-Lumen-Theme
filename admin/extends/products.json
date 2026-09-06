@@ -1,19 +1,35 @@
 {
   "extends": "products",
-  "owns": ["is_exam", "access_days", "ideal_percent", "exam_duration_minutes"],
+  "owns": [
+    "is_exam",
+    "access_days",
+    "ideal_percent",
+    "exam_duration_minutes",
+    "papers"
+  ],
   "handler": "Theme\\Backend\\Handlers\\ExamContributions",
   "tabs": [
     {
       "name": "Exam",
-      "ui": { "type": "tab", "icon": "tabler-certificate" },
+      "ui": {
+        "type": "tab",
+        "icon": "tabler-certificate"
+      },
       "elements": [
         {
-          "ui": { "type": "section", "cols": 12, "icon": "tabler-certificate" },
+          "ui": {
+            "type": "section",
+            "cols": 12,
+            "icon": "tabler-certificate"
+          },
           "name": "Sell This Product As An Exam",
           "subtitle": "Switch this on and the product becomes an exam: buying it grants a candidate access, and you build its papers and cases from the Papers and Cases screens. Everything commercial stays where it already is — the price, tax, discounts and catalogue listing on the tabs beside this one.",
           "elements": [
             {
-              "ui": { "type": "field", "cols": 12 },
+              "ui": {
+                "type": "field",
+                "cols": 12
+              },
               "key": "is_exam",
               "type": "switch",
               "label": "This product is an exam",
@@ -21,38 +37,214 @@
               "default": false
             },
             {
-              "ui": { "type": "field", "cols": 4 },
+              "ui": {
+                "type": "field",
+                "cols": 4
+              },
               "key": "access_days",
               "type": "number",
               "label": "Access Window (days)",
               "placeholder": "e.g. 90",
               "hint": "How long access lasts from the moment a candidate starts. Copied onto each enrolment when it is created, so changing it here affects future sittings only and can never shorten a window somebody already holds",
               "default": 30,
-              "rules": ["nullable", "integer", "min:1", "max:3650"]
+              "rules": [
+                "nullable",
+                "integer",
+                "min:1",
+                "max:3650"
+              ]
             },
             {
-              "ui": { "type": "field", "cols": 4 },
+              "ui": {
+                "type": "field",
+                "cols": 4
+              },
               "key": "ideal_percent",
               "type": "number",
               "label": "Target Score (%)",
               "placeholder": "e.g. 60",
               "hint": "The percentage of the maximum a candidate is aiming at, shown before they have a score of their own",
               "default": 60,
-              "rules": ["nullable", "integer", "min:1", "max:100"]
+              "rules": [
+                "nullable",
+                "integer",
+                "min:1",
+                "max:100"
+              ]
             },
             {
-              "ui": { "type": "field", "cols": 4 },
+              "ui": {
+                "type": "field",
+                "cols": 4
+              },
               "key": "exam_duration_minutes",
               "type": "number",
               "label": "Stated Duration (minutes)",
               "placeholder": "e.g. 180",
               "hint": "Display only, shown on the exam card. Each paper carries the timer that actually counts down",
-              "rules": ["nullable", "integer", "min:1", "max:1440"]
+              "rules": [
+                "nullable",
+                "integer",
+                "min:1",
+                "max:1440"
+              ]
             }
           ]
         },
         {
-          "ui": { "type": "section", "cols": 12, "icon": "tabler-info-circle" },
+          "ui": {
+            "type": "section",
+            "cols": 12,
+            "icon": "tabler-file-stack"
+          },
+          "name": "Papers",
+          "subtitle": "A paper is a timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one has been ended. Build the cases for each paper from the Cases screen.",
+          "elements": [
+            {
+              "ui": {
+                "type": "field",
+                "cols": 12
+              },
+              "key": "papers",
+              "type": "repeater",
+              "label": "Papers",
+              "itemLabel": "Paper",
+              "columns": [
+                {
+                  "label": "Paper",
+                  "key": "title"
+                },
+                {
+                  "label": "Minutes",
+                  "key": "duration_minutes"
+                },
+                {
+                  "label": "Cases",
+                  "key": "cases_count",
+                  "type": "count"
+                },
+                {
+                  "label": "Status",
+                  "key": "status",
+                  "type": "status"
+                }
+              ],
+              "dialog": {
+                "width": 720,
+                "create": {
+                  "title": "Add Paper",
+                  "subtitle": "Its name, and the clock that runs while a candidate sits it."
+                },
+                "update": {
+                  "title": "Edit Paper"
+                }
+              },
+              "elements": [
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 12
+                  },
+                  "key": "title",
+                  "type": "text",
+                  "label": "Paper Title",
+                  "placeholder": "e.g. Paper 1 — Chest and Abdomen",
+                  "translatable": true,
+                  "rules": [
+                    "required",
+                    "max:180"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 12
+                  },
+                  "key": "description",
+                  "type": "textarea",
+                  "label": "Description",
+                  "placeholder": "What this paper covers, shown before the candidate starts it",
+                  "translatable": true
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 6
+                  },
+                  "key": "duration_minutes",
+                  "type": "number",
+                  "label": "Duration (minutes)",
+                  "placeholder": "e.g. 35",
+                  "hint": "The timer that actually runs. Copied onto a sitting when the candidate opens the paper, so changing it later applies to new sittings only — anyone part-way through keeps the time they were given",
+                  "default": 60,
+                  "rules": [
+                    "required",
+                    "integer",
+                    "min:1",
+                    "max:1440"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 6
+                  },
+                  "key": "case_set_version",
+                  "type": "number",
+                  "label": "Case Set Version",
+                  "hint": "Bump this by hand after materially changing the case list. It records which revision a sitting was served; it never changes what anybody is served, because a sitting always replays from its own frozen copy",
+                  "default": 1,
+                  "rules": [
+                    "required",
+                    "integer",
+                    "min:1"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 6
+                  },
+                  "key": "status",
+                  "type": "select",
+                  "label": "Status",
+                  "default": "active",
+                  "hint": "Inactive removes it from new sittings. Anyone mid-paper is unaffected and every finished one still replays",
+                  "options": {
+                    "items": [
+                      {
+                        "title": "Active",
+                        "value": "active"
+                      },
+                      {
+                        "title": "Inactive",
+                        "value": "inactive"
+                      }
+                    ]
+                  },
+                  "rules": [
+                    "required"
+                  ]
+                },
+                {
+                  "ui": {
+                    "type": "field",
+                    "cols": 6
+                  },
+                  "key": "cases_count",
+                  "type": "display",
+                  "label": "Cases"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ui": {
+            "type": "section",
+            "cols": 12,
+            "icon": "tabler-info-circle"
+          },
           "name": "Before It Sells",
           "subtitle": "Two things are worth checking on the tabs beside this one. Turn Requires Shipping OFF — an exam has nothing to post, and with it off checkout never asks the candidate for an address or charges a delivery fee. And set the product Active, or it will not appear in the catalogue however this tab is configured.",
           "elements": []

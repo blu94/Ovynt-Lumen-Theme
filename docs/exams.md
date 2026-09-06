@@ -26,7 +26,36 @@ thinks of as one thing.
 | **Target Score (%)** | The percentage of the maximum shown before they have a score of their own. |
 | **Stated Duration** | Display only. Each paper carries the timer that actually runs. |
 
-Then build its **Papers**, and each paper's **Cases**, from their own screens.
+5. Add its **Papers** in the repeater on the same tab.
+
+Then build each paper's **Cases** from the Cases screen.
+
+## Papers live on this tab
+
+A paper is a timed set of cases — the thing a candidate opens, times and finishes. Add, edit and
+reorder them in the **Papers** table on the Exam tab; the order you drag them into is the order
+candidates meet them in.
+
+| Field | What it does |
+|---|---|
+| **Paper Title** | What the candidate sees. |
+| **Duration (minutes)** | **The timer that actually runs.** Copied onto a sitting when the paper is opened, so changing it later applies to new sittings only — anyone part-way through keeps the time they were given. |
+| **Case Set Version** | Bump by hand after materially changing the case list. It records which revision a sitting was served; it never changes what anybody is served. |
+| **Status** | Inactive removes it from new sittings. Anyone mid-paper is unaffected and every finished one still replays. |
+
+**Removing a row is not a hard delete.** The paper is soft-deleted and its cases are kept, so
+putting it back restores them.
+
+**A paper that has been sat is never removed at all.** If you delete its row, it is kept and set
+**Inactive** instead, and the activity log records why. An attempt is the record of what a
+candidate was served, and it hangs off that row — losing it would destroy their sitting. The old
+Papers screen refused the delete with a message; a repeater row has nowhere to show one, so it
+reaches the same outcome quietly.
+
+**Cases are deliberately not on this tab.** A repeater *can* nest, but a paper holds ten to forty
+cases, each with images and a rich-text model answer. Putting those two dialogs deep would carry
+an entire exam's content in every product save, so cases keep their own screen, filtered by
+paper.
 
 ## The price is the product's, and there is only one
 

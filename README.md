@@ -11,7 +11,7 @@ Vue-CDN conventions.
 
 | Area | State |
 |---|---|
-| Exams as an Exam tab on Products; papers and cases as their own screens | Built, verified against a running install |
+| Exams and papers as an Exam tab on Products; cases on their own screen | Built, verified against a running install |
 | Enrolments — staff grant, per-paper progress, guarded edits | Built |
 | Selling access — core product, checkout, enrolment written in the order's transaction | Built |
 | Notifications — access granted, new enrolment | Built |
@@ -38,9 +38,10 @@ item C1 in the build plan.
 ## How it is put together
 
 ```
-Exam        the thing that is bought — access window, target score
-└── Paper   a timed set of cases; THIS carries the clock that runs
-    └── Case  images, clinical brief, reporting instruction, model answer
+Product     IS the exam — title, price, tax, catalogue listing (core's own record)
+└── Exam tab   access window, target score, and the papers repeater
+    └── Paper    a timed set of cases; THIS carries the clock that runs
+        └── Case   images, clinical brief, instruction, model answer (own screen)
 ```
 
 Three tables, all prefixed `lumen_`, plus three for the candidate's side —
@@ -124,4 +125,4 @@ Both are recorded in the repository root's `ISSUES-CORE.md`:
 ## Documentation
 
 Operator guides ship in `docs/` and are served by Ovynt's own Documentation screen:
-`exams.md`, `exam-papers.md`, `exam-cases.md`, `enrolments.md`, `storefront-pages.md`.
+`exams.md`, `exam-cases.md`, `enrolments.md`, `storefront-pages.md`.

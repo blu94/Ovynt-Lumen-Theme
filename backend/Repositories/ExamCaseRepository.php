@@ -116,7 +116,23 @@ class ExamCaseRepository
                 ['title' => 'Active',   'value' => 'active'],
                 ['title' => 'Inactive', 'value' => 'inactive'],
             ],
-            'papers' => app(ExamPaperRepository::class)->getOptions()['papers'] ?? [],
+            // The paper picker. Papers are authored on the product's Exam tab and have no
+            // repository of their own any more, so the list is built here — named
+            // "{exam} — {paper}", because every exam has a "Paper 1" and the picker is
+            // unusable without saying which one.
+            'papers' => ExamPaper::query()
+                ->with('product:id,title,slug')
+                ->ordered()
+                ->get()
+                ->map(function (ExamPaper $p) {
+                    $paper = $p->getTranslation('title', app()->getLocale(), false) ?: $p->slug;
+                    $exam  = $p->product?->getTranslation('title', app()->getLocale(), false);
+
+                    return [
+                        'title' => $exam ? "{$exam} — {$paper}" : $paper,
+                        'value' => $p->id,
+                    ];
+                })->all(),
         ];
     }
 
