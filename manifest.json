@@ -1,0 +1,28 @@
+{
+  "name": "Ovynt Lumen Theme",
+  "title": "Ovynt Lumen Theme",
+  "slug": "lumen",
+  "version": "0.1.0",
+  "author": "Ovynt",
+  "license": "proprietary",
+  "requires_core": ">=1.3.0 <2.0.0",
+  "preview": "/preview.png",
+  "schema_paths": {
+    "settings": "admin/settings/index.json",
+    "sections": [
+      "admin/sections/ExamCatalogue.json",
+      "admin/sections/CandidateDashboard.json"
+    ]
+  },
+  "modules": [
+    "exams",
+    "exam-papers",
+    "exam-cases",
+    "enrolments"
+  ],
+  "checkout": {
+    "writers": [
+      "Theme\\Backend\\Writers\\ExamEnrolmentWriter"
+    ]
+  }
+}

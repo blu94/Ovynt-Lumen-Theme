@@ -1,0 +1,16 @@
+{
+  "name": "Cases",
+  "type": "exam-cases",
+  "routeBase": "module/exam-cases",
+  "order": 22,
+  "icon": "tabler-photo-scan",
+  "api": "/admin/modules/exam-cases",
+  "resource": "modules",
+  "table": { "$ref": "index.json" },
+  "form": { "$ref": "form.json" },
+  "create": { "$ref": "create.json" },
+  "navigation": [
+    { "title": "All Cases", "icon": "tabler-circle", "to": "module-type" },
+    { "title": "Add Case", "icon": "tabler-circle", "to": "module-type-create" }
+  ]
+}

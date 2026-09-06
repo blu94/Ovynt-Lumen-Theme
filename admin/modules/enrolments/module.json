@@ -1,0 +1,16 @@
+{
+  "name": "Enrolments",
+  "type": "enrolments",
+  "routeBase": "module/enrolments",
+  "order": 23,
+  "icon": "tabler-user-check",
+  "api": "/admin/modules/enrolments",
+  "resource": "modules",
+  "table": { "$ref": "index.json" },
+  "form": { "$ref": "form.json" },
+  "create": { "$ref": "create.json" },
+  "navigation": [
+    { "title": "All Enrolments", "icon": "tabler-circle", "to": "module-type" },
+    { "title": "Grant Access", "icon": "tabler-circle", "to": "module-type-create" }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "expandable": false,
+  "headerActions": {
+    "elements": [
+      {
+        "key": "reload",
+        "ui": { "type": "button", "icon": "tabler-refresh", "color": "success", "rounded": true },
+        "tooltip": "Refresh List",
+        "action": "reload",
+        "class": "ms-2"
+      },
+      {
+        "key": "create",
+        "ui": { "type": "button", "icon": "tabler-plus", "color": "primary", "rounded": "md" },
+        "label": "Grant Access",
+        "tooltip": "Give a candidate access without a purchase",
+        "action": "navigate",
+        "to": "/module/enrolments/create"
+      }
+    ]
+  },
+  "filters": {
+    "elements": [
+      {
+        "ui": { "type": "field" },
+        "key": "exam_id",
+        "label": "Exam",
+        "placeholder": "Any exam",
+        "type": "select",
+        "options": { "url": "/admin/modules/enrolments/options", "master": "exams" }
+      },
+      {
+        "ui": { "type": "field" },
+        "key": "status",
+        "label": "Status",
+        "placeholder": "Any status",
+        "type": "select",
+        "options": { "url": "/admin/modules/enrolments/options", "master": "status" }
+      }
+    ]
+  },
+  "elements": [
+    { "ui": { "type": "display" }, "label": "ID", "key": "id", "sortable": true, "width": "60px" },
+    { "ui": { "type": "display" }, "label": "Exam", "key": "exam.title", "sortable": false, "searchable": true },
+    { "ui": { "type": "display" }, "label": "Candidate", "key": "user_id", "sortable": false, "searchable": true },
+    { "ui": { "type": "display" }, "label": "Mode", "key": "mode", "sortable": false, "align": "center" },
+    { "ui": { "type": "display" }, "label": "Expires", "key": "expires_at", "sortable": true, "type": "datetime" },
+    { "ui": { "type": "display" }, "label": "Status", "key": "status", "sortable": false, "align": "center", "type": "status" }
+  ],
+  "actions": { "elements": ["edit"], "class": "fit" }
+}

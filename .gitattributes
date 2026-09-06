@@ -1,0 +1,27 @@
+# Normalise every text file to LF, in the repository and in working copies.
+#
+# Not cosmetic. A theme may bundle plugins (`manifest.plugins`), and `ovynt:plugin-sign`
+# signs a SHA-256 digest of every file's contents. With `core.autocrlf=true` — the Windows
+# default, and what this project is developed on — git hands a Windows checkout CRLF and a
+# Linux checkout LF, so the same commit produces two different digests and a package signed
+# on one machine fails verification after being cloned on the other. Pinning the line ending
+# is what makes the signature reproducible from source.
+#
+# It matters for the theme's own files too: `ThemeController` resolves Blade templates from
+# the deployed tree, and a diff that is nothing but line endings buries every real change.
+* text=auto eol=lf
+
+# Never touched by line-ending conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.pem binary
+plugin.sig binary

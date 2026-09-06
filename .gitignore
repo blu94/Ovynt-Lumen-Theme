@@ -1,0 +1,19 @@
+# Packaging artefact written by scripts/import-theme.ps1 on every full import.
+theme.zip
+
+# Import timestamp used to decide fast-sync vs full import. Machine-local.
+.sync-state
+
+# Compiled from scss/main.scss by the import script. The map published the SCSS
+# structure to every visitor, so it is never shipped and never committed.
+theme.css.map
+
+# Playwright MCP browser artifacts (screenshots, traces). Machine-local.
+.playwright-mcp/
+
+# Claude Code's per-checkout permission grants. Machine-local, and personal to whoever
+# is working here — never someone else's to inherit.
+.claude/
+
+# Never belongs in a theme package; the import script excludes it too.
+node_modules/

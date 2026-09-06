@@ -1,0 +1,66 @@
+{
+  "type": "CANDIDATE_DASHBOARD_SECTION",
+  "component": "CandidateDashboardSection",
+  "name": "Candidate Dashboard",
+  "description": "The signed-in candidate's own exams: progress, score so far, and the one action that fits each enrolment. Renders a sign-in prompt to anyone not signed in.",
+  "ui": { "icon": "tabler-layout-dashboard" },
+  "contents": {
+    "elements": [
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "heading",
+        "type": "text",
+        "label": "Heading",
+        "placeholder": "e.g. Your exams",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "empty_text",
+        "type": "text",
+        "label": "Empty Message",
+        "placeholder": "e.g. You have not started any exams yet.",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "signed_out_text",
+        "type": "text",
+        "label": "Signed-out Message",
+        "placeholder": "e.g. Sign in to see your exams.",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "show_expired",
+        "type": "switch",
+        "label": "Show Ended Access",
+        "hint": "Ended enrolments stay listed, greyed, with what they scored. Off hides them",
+        "default": true
+      }
+    ]
+  },
+  "settings": {
+    "elements": [
+      {
+        "ui": { "type": "section", "cols": 12 },
+        "name": "General",
+        "elements": [
+          {
+            "ui": { "type": "field", "cols": 6 },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Disabled", "value": "disabled" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

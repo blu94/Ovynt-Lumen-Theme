@@ -1,0 +1,10 @@
+{
+  "elements": [
+    {
+      "ui": { "type": "tabs" },
+      "elements": [
+        { "$ref": "general.json" }
+      ]
+    }
+  ]
+}

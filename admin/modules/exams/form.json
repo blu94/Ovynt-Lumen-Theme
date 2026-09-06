@@ -1,0 +1,164 @@
+{
+  "elements": [
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-certificate" },
+      "name": "The Exam",
+      "subtitle": "What candidates see on the catalogue and buy. An exam holds papers; a paper holds cases. Write the exam here, then add its papers from the Papers screen.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 8 },
+          "key": "title",
+          "type": "text",
+          "label": "Exam Title",
+          "placeholder": "e.g. Rapid Reporting — Part 2B",
+          "translatable": true,
+          "rules": ["required", "max:180"]
+        },
+        {
+          "ui": { "type": "field", "cols": 4 },
+          "key": "slug",
+          "type": "text",
+          "label": "Slug",
+          "placeholder": "Left empty, generated from the title",
+          "hint": "Used in the exam's public address. Made unique automatically",
+          "rules": ["nullable", "max:180"]
+        },
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "subtitle",
+          "type": "text",
+          "label": "Subtitle",
+          "placeholder": "e.g. 30 rapid reporting cases under exam conditions",
+          "translatable": true,
+          "rules": ["nullable", "max:255"]
+        },
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "description",
+          "type": "textarea",
+          "label": "Description",
+          "placeholder": "What this exam covers and who it is for",
+          "translatable": true
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-shopping-cart" },
+      "name": "Selling It",
+      "subtitle": "An exam does not carry its own price. It names a product, and that product's price, tax, discounts and currency are the ones the customer is actually charged — so the two can never disagree. Leave the product empty to make the exam free.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 8, "autoSelectSingle": false },
+          "key": "product_id",
+          "type": "autocomplete",
+          "label": "Sold As",
+          "placeholder": "Search products — leave empty for a free exam",
+          "hint": "Create the product first under Products, priced however you like, then name it here. Buying it grants access automatically; nothing else has to be wired up. A product with no shipping requirement asks the customer for no address",
+          "options": {
+            "url": "/admin/products/options",
+            "itemTitle": "title",
+            "itemValue": "id"
+          },
+          "rules": ["nullable", "integer"]
+        },
+        {
+          "ui": { "type": "field", "cols": 4 },
+          "key": "access_days",
+          "type": "number",
+          "label": "Access Window (days)",
+          "placeholder": "e.g. 90",
+          "hint": "How long access lasts from the moment a candidate starts. Copied onto each enrolment when it is created, so changing it here affects future sittings only and never shortens a window somebody already has",
+          "default": 30,
+          "rules": ["required", "integer", "min:1", "max:3650"]
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-clock" },
+      "name": "Timing and Target",
+      "subtitle": "The exam's duration is shown to candidates as a guide. The clock that actually runs belongs to each paper.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "duration_minutes",
+          "type": "number",
+          "label": "Stated Duration (minutes)",
+          "placeholder": "e.g. 180",
+          "hint": "Display only — shown on the exam card. Each paper carries the timer that counts down",
+          "rules": ["nullable", "integer", "min:1", "max:1440"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "ideal_percent",
+          "type": "number",
+          "label": "Target Score (%)",
+          "placeholder": "e.g. 60",
+          "hint": "The percentage of the maximum a candidate is aiming at, shown before they have a score of their own",
+          "default": 60,
+          "rules": ["required", "integer", "min:1", "max:100"]
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "elements": [
+      {
+        "ui": { "type": "row", "dense": true },
+        "elements": [
+          { "ui": { "type": "locale-switcher" } },
+          {
+            "ui": { "type": "field" },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "draft",
+            "hint": "Only Active exams reach candidates. Inactive removes it from the catalogue and leaves every sitting intact",
+            "options": {
+              "items": [
+                { "title": "Draft", "value": "draft" },
+                { "title": "Active", "value": "active" },
+                { "title": "Inactive", "value": "inactive" }
+              ]
+            },
+            "rules": ["required"]
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "orders",
+            "type": "number",
+            "label": "Display Order",
+            "placeholder": "e.g. 10",
+            "hint": "Lower sorts first"
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "papers_count",
+            "type": "display",
+            "label": "Papers"
+          }
+        ]
+      }
+    ],
+    "footer": {
+      "elements": [
+        {
+          "ui": { "type": "row", "dense": true },
+          "elements": [
+            {
+              "ui": { "type": "button", "color": "primary", "icon": "tabler-checkbox" },
+              "action": "save",
+              "label": "Save Changes",
+              "redirect": false
+            },
+            {
+              "ui": { "type": "button", "color": "secondary", "variant": "tonal", "icon": "tabler-arrow-left" },
+              "action": "cancel",
+              "label": "Cancel",
+              "redirect": "/module/exams"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "elements": [
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-file-stack" },
+      "name": "The Paper",
+      "subtitle": "A timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one of them has been ended.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 6, "autoSelectSingle": false },
+          "key": "exam_id",
+          "type": "autocomplete",
+          "label": "Exam",
+          "placeholder": "Which exam does this belong to?",
+          "options": {
+            "url": "/admin/modules/exam-papers/options",
+            "master": "exams"
+          },
+          "rules": ["required", "integer"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "title",
+          "type": "text",
+          "label": "Paper Title",
+          "placeholder": "e.g. Paper 1 — Chest and Abdomen",
+          "translatable": true,
+          "rules": ["required", "max:180"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "slug",
+          "type": "text",
+          "label": "Slug",
+          "placeholder": "Left empty, generated from the title",
+          "hint": "Unique within its exam, not across the site — every exam is allowed a Paper 1",
+          "rules": ["nullable", "max:180"]
+        },
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "description",
+          "type": "textarea",
+          "label": "Description",
+          "placeholder": "What this paper covers, shown before the candidate starts it",
+          "translatable": true
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-clock" },
+      "name": "The Clock",
+      "subtitle": "This is the timer that runs. In Timed mode the server ends the paper when it reaches zero; in Practice mode it runs on and nothing is closed.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "duration_minutes",
+          "type": "number",
+          "label": "Duration (minutes)",
+          "placeholder": "e.g. 35",
+          "hint": "Copied onto a sitting when the candidate opens the paper. Changing it later applies to new sittings only — anyone already part-way through keeps the time they were given",
+          "default": 60,
+          "rules": ["required", "integer", "min:1", "max:1440"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "case_set_version",
+          "type": "number",
+          "label": "Case Set Version",
+          "placeholder": "1",
+          "hint": "Bump this by hand after materially changing the case list, so a finished sitting records which revision it sat. It does not change what anybody is served — a sitting always replays from its own frozen copy",
+          "default": 1,
+          "rules": ["required", "integer", "min:1"]
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "elements": [
+      {
+        "ui": { "type": "row", "dense": true },
+        "elements": [
+          { "ui": { "type": "locale-switcher" } },
+          {
+            "ui": { "type": "field" },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "hint": "Inactive removes it from new sittings. Anyone mid-paper is unaffected and every finished one still replays",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Inactive", "value": "inactive" }
+              ]
+            },
+            "rules": ["required"]
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "orders",
+            "type": "number",
+            "label": "Display Order",
+            "placeholder": "e.g. 10",
+            "hint": "The order candidates meet the papers in"
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "cases_count",
+            "type": "display",
+            "label": "Cases"
+          }
+        ]
+      }
+    ],
+    "footer": {
+      "elements": [
+        {
+          "ui": { "type": "row", "dense": true },
+          "elements": [
+            {
+              "ui": { "type": "button", "color": "primary", "icon": "tabler-checkbox" },
+              "action": "save",
+              "label": "Save Changes",
+              "redirect": false
+            },
+            {
+              "ui": { "type": "button", "color": "secondary", "variant": "tonal", "icon": "tabler-arrow-left" },
+              "action": "cancel",
+              "label": "Cancel",
+              "redirect": "/module/exam-papers"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

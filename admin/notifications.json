@@ -1,0 +1,69 @@
+{
+  "types": [
+    {
+      "key": "enrolment_granted",
+      "name": "Access granted",
+      "description": "A candidate was given access to an exam, by purchase or by hand.",
+      "audience": "customer",
+      "level": "success",
+      "icon": "tabler-certificate",
+      "action_url": "/dashboard",
+      "placeholders": [
+        "exam_title",
+        "expires_on"
+      ],
+      "channels": [
+        "inapp",
+        "mail"
+      ],
+      "title": {
+        "en": "You now have access to {{ exam_title }}"
+      },
+      "body": {
+        "en": "Your access runs until {{ expires_on }}. Open your dashboard to start whenever you are ready."
+      }
+    },
+    {
+      "key": "enrolment_expiring",
+      "name": "Access ending soon",
+      "description": "A candidate's access window is close to closing.",
+      "audience": "customer",
+      "level": "warning",
+      "icon": "tabler-clock-exclamation",
+      "action_url": "/dashboard",
+      "placeholders": [
+        "exam_title",
+        "days_left"
+      ],
+      "channels": [
+        "inapp",
+        "mail"
+      ],
+      "title": {
+        "en": "{{ exam_title }} access ends in {{ days_left }} days"
+      },
+      "body": {
+        "en": "Anything you have already written and marked is kept. If you need longer, you can buy the exam again for a fresh window."
+      }
+    },
+    {
+      "key": "new_enrolment",
+      "name": "New enrolment",
+      "description": "A candidate started an exam. Sent to staff who can view enrolments.",
+      "audience": "staff",
+      "level": "info",
+      "icon": "tabler-user-check",
+      "action_url": "/module/enrolments",
+      "placeholders": [
+        "exam_title",
+        "candidate"
+      ],
+      "channels": [
+        "inapp"
+      ],
+      "title": {
+        "en": "{{ candidate }} started {{ exam_title }}"
+      }
+    }
+  ]
+}

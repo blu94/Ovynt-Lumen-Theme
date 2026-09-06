@@ -1,0 +1,155 @@
+{
+  "elements": [
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-photo-scan" },
+      "name": "The Images",
+      "subtitle": "The study the candidate reports. Upload every image in the order they should be read — a plain film and its lateral are a sequence, not a set. These go to the protected store: they are never served from a public folder and every view is a short-lived signed link.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 12, "displayMode": "single" },
+          "key": "assets",
+          "type": "image",
+          "label": "Case Images",
+          "hint": "Stored privately. Removing an image here detaches it from the case; the file stays in the media library",
+          "rules": ["nullable", "array"],
+          "metadata": {
+            "*.id": ["required", "integer", "exists:assets,id"]
+          },
+          "dropzoneOptions": {
+            "usage": "LUMEN_CASE_IMAGE",
+            "maxFiles": 12,
+            "acceptedFiles": "image/*",
+            "protectedDisk": true
+          }
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-clipboard-text" },
+      "name": "The Case",
+      "subtitle": "What the candidate reads beside the images.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 6, "autoSelectSingle": false },
+          "key": "paper_id",
+          "type": "autocomplete",
+          "label": "Paper",
+          "placeholder": "Which paper does this case belong to?",
+          "options": {
+            "url": "/admin/modules/exam-cases/options",
+            "master": "papers"
+          },
+          "rules": ["required", "integer"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "title",
+          "type": "text",
+          "label": "Case Title",
+          "placeholder": "e.g. Chest radiograph — 54M, breathless",
+          "hint": "Staff-facing. Candidates see cases numbered in order, not by title",
+          "translatable": true,
+          "rules": ["required", "max:180"]
+        },
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "brief",
+          "type": "textarea",
+          "label": "Clinical Brief",
+          "placeholder": "e.g. 54-year-old man, three days of breathlessness and pleuritic pain.",
+          "hint": "The context the candidate is given before looking at the images",
+          "translatable": true
+        },
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "instruction",
+          "type": "text",
+          "label": "Reporting Instruction",
+          "placeholder": "e.g. Report this study.",
+          "hint": "Shown directly above the report box",
+          "translatable": true,
+          "rules": ["nullable", "max:255"]
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-award" },
+      "name": "Marking",
+      "subtitle": "The model answer the candidate compares their report against once the paper has ended, and the mark it is worth.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "model_answer",
+          "type": "richtext",
+          "label": "Model Answer",
+          "hint": "Never sent to the candidate while the paper is open — not withheld by the page, but genuinely absent from what the sitting is served. It is read only once they end the paper",
+          "translatable": true
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "score_max",
+          "type": "number",
+          "label": "Maximum Score",
+          "placeholder": "e.g. 5",
+          "hint": "The ceiling a self-mark is validated against, and what this case contributes to the paper total. Half marks are allowed",
+          "default": 5,
+          "rules": ["required", "numeric", "min:0.5", "max:100"]
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "elements": [
+      {
+        "ui": { "type": "row", "dense": true },
+        "elements": [
+          { "ui": { "type": "locale-switcher" } },
+          {
+            "ui": { "type": "field" },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "hint": "Inactive removes it from new sittings only. Anyone part-way through, and every finished sitting, keeps it exactly as served",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Inactive", "value": "inactive" }
+              ]
+            },
+            "rules": ["required"]
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "orders",
+            "type": "number",
+            "label": "Display Order",
+            "placeholder": "e.g. 10",
+            "hint": "The order cases are served in within the paper"
+          }
+        ]
+      }
+    ],
+    "footer": {
+      "elements": [
+        {
+          "ui": { "type": "row", "dense": true },
+          "elements": [
+            {
+              "ui": { "type": "button", "color": "primary", "icon": "tabler-checkbox" },
+              "action": "save",
+              "label": "Save Changes",
+              "redirect": false
+            },
+            {
+              "ui": { "type": "button", "color": "secondary", "variant": "tonal", "icon": "tabler-arrow-left" },
+              "action": "cancel",
+              "label": "Cancel",
+              "redirect": "/module/exam-cases"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

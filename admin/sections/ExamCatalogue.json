@@ -1,0 +1,66 @@
+{
+  "type": "EXAM_CATALOGUE_SECTION",
+  "component": "ExamCatalogueSection",
+  "name": "Exam Catalogue",
+  "description": "Lists the exams on sale, with the price from each exam's linked product and a button that reflects whether the reader already has access.",
+  "ui": { "icon": "tabler-certificate" },
+  "contents": {
+    "elements": [
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "heading",
+        "type": "text",
+        "label": "Heading",
+        "placeholder": "e.g. Choose your exam",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "intro",
+        "type": "textarea",
+        "label": "Intro",
+        "placeholder": "One line under the heading",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "limit",
+        "type": "number",
+        "label": "Maximum Shown",
+        "placeholder": "Leave empty for all",
+        "hint": "Only active exams are ever listed",
+        "rules": ["nullable", "integer", "min:1", "max:60"]
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "show_price",
+        "type": "switch",
+        "label": "Show Prices",
+        "default": true
+      }
+    ]
+  },
+  "settings": {
+    "elements": [
+      {
+        "ui": { "type": "section", "cols": 12 },
+        "name": "General",
+        "elements": [
+          {
+            "ui": { "type": "field", "cols": 6 },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Disabled", "value": "disabled" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
