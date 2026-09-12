@@ -134,7 +134,7 @@ class ExamEnrolmentWriter implements OrderWriter
      *
      * **The key is asked for, never written out.** The registry prefixes a theme's types with a
      * slug derived from the manifest *title*, not its `slug` field — this theme declares
-     * `"slug": "lumen"` and installs as `ovynt-lumen-theme`. A hardcoded `theme:lumen.` prefix
+     * `"slug": "lumen"` and installs as `alvyth-lumen-theme`. A hardcoded `theme:lumen.` prefix
      * would be a key the registry never issued: `Notifier` would log "unknown notification
      * type", answer 0, and the type would sit visibly on the preferences screen doing nothing.
      */

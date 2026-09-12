@@ -3,7 +3,7 @@
 **Where:** the forms live under Sidebar → **Forms**; each sits on a page through the theme's
 **Inquiry Form** block.
 
-An exam site takes three kinds of message, and this theme handles all three with Ovynt's own
+An exam site takes three kinds of message, and this theme handles all three with Alvyth's own
 Forms module rather than an inbox of its own: the fields, the validation, the lead storage and
 the *notify on submit* email are core's, so you can change any of them without touching the
 theme.
@@ -22,7 +22,7 @@ so the right people hear about a new one.
 The theme ships the three forms and their pages as starter content, created by hand once:
 
 ```powershell
-docker exec -u www-data ovynt_app php -r "require '/var/www/vendor/autoload.php'; `$app = require '/var/www/bootstrap/app.php'; `$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); print_r((new Theme\Backend\Seeders\StarterFormsSeeder)->run());"
+docker exec -u www-data alvyth_app php -r "require '/var/www/vendor/autoload.php'; `$app = require '/var/www/bootstrap/app.php'; `$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); print_r((new Theme\Backend\Seeders\StarterFormsSeeder)->run());"
 ```
 
 It never overwrites: a form that already exists by slug is left as you have it, and a page that

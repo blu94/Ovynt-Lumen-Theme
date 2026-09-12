@@ -1,9 +1,9 @@
 {
-  "name": "Ovynt Lumen Theme",
-  "title": "Ovynt Lumen Theme",
+  "name": "Alvyth Lumen Theme",
+  "title": "Alvyth Lumen Theme",
   "slug": "lumen",
   "version": "0.1.0",
-  "author": "Ovynt",
+  "author": "Alvyth",
   "license": "proprietary",
   "requires_core": ">=1.4.1 <2.0.0",
   "preview": "/preview.png",

@@ -10,7 +10,7 @@ use Theme\Backend\Models\Enrolment;
 /**
  * Once a day: close the windows that have passed, and warn the candidates whose are about to.
  *
- * Declared in `manifest.json` under `schedule`, run by core's `ovynt:package-tasks`. Two jobs,
+ * Declared in `manifest.json` under `schedule`, run by core's `alvyth:package-tasks`. Two jobs,
  * one clock, because both are about the same date:
  *
  * - **The sweep.** `Enrolment::hasExpired()` treats the date as the authority and the status

@@ -1,6 +1,6 @@
-# Ovynt Lumen Theme
+# Alvyth Lumen Theme
 
-An exam-preparation theme for [Ovynt](https://github.com/blu94/Ovynt): timed, case-based papers
+An exam-preparation theme for [Alvyth](https://github.com/blu94/Alvyth): timed, case-based papers
 with image-led reporting and self-marking against a model answer. Structurally derived from the
 Ella and Saffron themes — same layout shape, settings-schema system, section-driver pattern and
 Vue-CDN conventions.
@@ -45,7 +45,7 @@ to review. The mode switch on the papers page is one confirm and one call to `en
 
 Sitting a paper is a sequence of writes from a signed-in candidate — open a paper, save progress,
 end it, save a report, submit a self-mark, switch mode — and **a theme cannot register a single
-HTTP route**. Ovynt states this in five separate files; a theme is weaker than a plugin, which
+HTTP route**. Alvyth states this in five separate files; a theme is weaker than a plugin, which
 cannot either.
 
 Core therefore owns one route, `POST /api/storefront/actions/{name}`, and this theme declares
@@ -122,7 +122,7 @@ response could see the answers while still writing.)
 
 ### Case images are private
 
-They go to Ovynt's `protected` disk, which nginx never serves; every view is a short-lived signed
+They go to Alvyth's `protected` disk, which nginx never serves; every view is a short-lived signed
 link. Two known limits, both core's: a link works more than once inside its window, and it does
 not check who is asking. Tracked as `ISSUES-CORE.md` C3.
 
@@ -154,11 +154,11 @@ or migration triggers a full re-install; anything else syncs just the changed fi
 
 `backend/Seeders/DemoExamSeeder.php` writes one exam — two papers, seven cases with generated
 placeholder images on the protected disk — plus the three storefront pages, an enrolment for
-`user@ovynt.com` and a finished, self-marked sitting of Paper 1, so every screen has something to
+`user@alvyth.com` and a finished, self-marked sitting of Paper 1, so every screen has something to
 show. It goes through the theme's real handlers, is safe to re-run, and is invoked by hand:
 
 ```powershell
-docker exec -u www-data ovynt_app php -r "require '/var/www/vendor/autoload.php'; `$app = require '/var/www/bootstrap/app.php'; `$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); print_r((new Theme\Backend\Seeders\DemoExamSeeder)->run());"
+docker exec -u www-data alvyth_app php -r "require '/var/www/vendor/autoload.php'; `$app = require '/var/www/bootstrap/app.php'; `$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); print_r((new Theme\Backend\Seeders\DemoExamSeeder)->run());"
 ```
 
 `backend/Seeders/StarterFormsSeeder.php` is the same idea for content a real site needs rather
@@ -205,12 +205,12 @@ All are recorded in the repository root's `ISSUES-CORE.md`:
 
 ## Documentation
 
-Operator guides ship in `docs/` and are served by Ovynt's own Documentation screen:
+Operator guides ship in `docs/` and are served by Alvyth's own Documentation screen:
 `exams.md`, `enrolments.md`, `testimonials.md`, `forms.md`, `storefront-pages.md`.
 
 ## Licence
 
-Proprietary. Copyright (c) 2026 Ovynt Labs — see [LICENSE](LICENSE). One production installation
+Proprietary. Copyright (c) 2026 Alvyth Labs — see [LICENSE](LICENSE). One production installation
 per licence; no redistribution, resale or derivative works. Third-party components under
 `vendor/` and `node_modules/` keep their own licences. The full licensing model — core, themes,
-free plugins and paid plugins — is in [LICENSING.md](https://github.com/blu94/Ovynt/blob/main/LICENSING.md).
+free plugins and paid plugins — is in [LICENSING.md](https://github.com/blu94/Alvyth/blob/main/LICENSING.md).

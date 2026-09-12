@@ -67,7 +67,7 @@ all of it together.
 | **Maximum Score** | The ceiling a self-mark is validated against. Half marks allowed. |
 | **Model Answer** | Rich text. Never sent to a candidate while their paper is open — it is absent from what the sitting is served, not merely hidden — and read only once they end the paper. |
 
-**The thumbnail after an upload is currently blank.** That is a defect in Ovynt's admin, not a
+**The thumbnail after an upload is currently blank.** That is a defect in Alvyth's admin, not a
 lost upload: the file is stored and attached when you save, and the **Images** count on the case
 row is the check that it was.
 
@@ -110,6 +110,6 @@ the exam again and get a fresh enrolment; the old one remains readable under **E
 
 ## Deleting
 
-Delete the product as you would any other. Ovynt's own rules apply — and note that the papers,
+Delete the product as you would any other. Alvyth's own rules apply — and note that the papers,
 cases and sittings belong to the product, so removing it removes the exam. To take an exam out
 of circulation while keeping its history, switch the Exam tab off or set the product Inactive.

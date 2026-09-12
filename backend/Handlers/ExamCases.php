@@ -12,7 +12,7 @@ use Theme\Backend\Models\ExamPaper;
  *
  * Two levels deep on the product form, which mirrors the system this theme is modelled on:
  * there, `PackagesDialog.vue` imports and renders `QuestionsTable` inside itself, so an exam,
- * its papers and their cases are one screen. Ovynt expresses the same shape declaratively —
+ * its papers and their cases are one screen. Alvyth expresses the same shape declaratively —
  * a repeater's dialog renders through the generic `Builder`, so a differently-shaped repeater
  * nests inside one.
  */

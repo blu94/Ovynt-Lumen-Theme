@@ -45,7 +45,7 @@ use Theme\Backend\Support\BuilderPage;
 class DemoExamSeeder
 {
     public const PRODUCT_SLUG   = 'frcr-2b-rapid-reporting-mock-1';
-    public const CANDIDATE_EMAIL = 'user@ovynt.com';
+    public const CANDIDATE_EMAIL = 'user@alvyth.com';
 
     /** @return array<string,mixed> what was found and what was made, for the caller to print */
     public function run(): array

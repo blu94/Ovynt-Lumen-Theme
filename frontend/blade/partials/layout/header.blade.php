@@ -56,7 +56,7 @@
 
             <a class="lumen-header__cart" href="/cart">
                 {{ __('Cart') }}
-                <span data-ovynt-cart-count hidden>0</span>
+                <span data-alvyth-cart-count hidden>0</span>
             </a>
         </nav>
     </div>

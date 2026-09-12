@@ -57,13 +57,13 @@ give itself more.
 ## Notifications
 
 Granting access — by purchase or by hand — sends the candidate **Access granted**, and tells
-staff who can view enrolments that somebody enrolled. Both are ordinary Ovynt notifications:
+staff who can view enrolments that somebody enrolled. Both are ordinary Alvyth notifications:
 candidates can turn theirs off under their own preferences, and the email template is editable
 under **Settings → Mail → Templates** once it has fired once.
 
 **Access ending soon** goes out once per enrolment, seven days before the window closes, from
 the theme's daily task (`backend/Schedule/EnrolmentExpiry.php`, declared under `schedule` in the
-manifest and run by core's `ovynt:package-tasks`). The same task sets **Expired** on every
+manifest and run by core's `alvyth:package-tasks`). The same task sets **Expired** on every
 enrolment whose date has passed, so the list stops showing *Active* beside a date last month.
 Both depend on the scheduler: on a containerised install it runs itself; on shared hosting it runs
 only if the operator has added the single cron line, which the Health screen reports on. A

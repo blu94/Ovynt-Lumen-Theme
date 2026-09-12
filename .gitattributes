@@ -1,6 +1,6 @@
 # Normalise every text file to LF, in the repository and in working copies.
 #
-# Not cosmetic. A theme may bundle plugins (`manifest.plugins`), and `ovynt:plugin-sign`
+# Not cosmetic. A theme may bundle plugins (`manifest.plugins`), and `alvyth:plugin-sign`
 # signs a SHA-256 digest of every file's contents. With `core.autocrlf=true` — the Windows
 # default, and what this project is developed on — git hands a Windows checkout CRLF and a
 # Linux checkout LF, so the same commit produces two different digests and a package signed

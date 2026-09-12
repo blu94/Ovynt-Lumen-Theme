@@ -45,7 +45,7 @@
     <script src="{{ asset($apiJsPath) }}?v={{ file_exists(public_path($apiJsPath)) ? filemtime(public_path($apiJsPath)) : '' }}{{ $assetRevSuffix }}"></script>
 
     {{-- The token cookie is HttpOnly, so script cannot read it; the server says whether one is present. --}}
-    <script>window.OvyntAuthHint = @json((bool) (request()->cookie('customer_access_token') ?: ($_COOKIE['customer_access_token'] ?? null)));</script>
+    <script>window.AlvythAuthHint = @json((bool) (request()->cookie('customer_access_token') ?: ($_COOKIE['customer_access_token'] ?? null)));</script>
 
     @if(file_exists(public_path($sfPath = "themes/{$themeSlug}/frontend/assets/js/storefront.min.js")))
         <script src="{{ asset($sfPath) }}?v={{ filemtime(public_path($sfPath)) }}{{ $assetRevSuffix }}"></script>

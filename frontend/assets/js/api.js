@@ -31,7 +31,7 @@
     // server answers 401, so a lapsed token cannot keep the UI looking signed in
     // (audit S3).
     window.ThemeApi.clearSession = () => {
-        window.OvyntAuthHint = false;
+        window.AlvythAuthHint = false;
         // Legacy copies from before the cookie went HttpOnly (audit S2); the HttpOnly
         // cookie itself can only be cleared by the logout response.
         localStorage.removeItem('customer_access_token');
@@ -46,7 +46,7 @@
         const res = await fetch(url, options);
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-            if (res.status === 401 && (window.OvyntAuthHint || storedToken())) {
+            if (res.status === 401 && (window.AlvythAuthHint || storedToken())) {
                 window.ThemeApi.clearSession();
             }
             throw { data: data || { message: 'Request failed' } };
