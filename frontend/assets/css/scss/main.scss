@@ -489,3 +489,243 @@ textarea.lumen-form__input { min-height: 120px; resize: vertical; }
 .lumen-testimonial__author { font-weight: 600; }
 
 .lumen-testimonial__role { color: var(--lumen-ink-soft); }
+
+// ---------------------------------------------------------------------------
+// The player — /exam/{slug}/{paper}
+// ---------------------------------------------------------------------------
+
+[v-cloak] { display: none; }
+
+.lumen-btn--ghost {
+  background: var(--lumen-surface);
+  border-color: var(--lumen-line);
+  color: var(--lumen-ink);
+
+  &:hover { filter: none; border-color: var(--lumen-accent); color: var(--lumen-accent); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+.lumen-papers__mode {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+  color: var(--lumen-ink-soft);
+}
+
+.lumen-page--player { max-width: none; }
+
+.lumen-player { padding: 20px 0 48px; }
+
+.lumen-player__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 12px 18px;
+  background: var(--lumen-surface);
+  border: 1px solid var(--lumen-line);
+  border-radius: var(--lumen-radius);
+}
+
+.lumen-player__titles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  min-width: 0;
+}
+
+.lumen-player__back { color: var(--lumen-ink-soft); text-decoration: none; font-size: 0.9rem; &:hover { color: var(--lumen-accent); } }
+.lumen-player__title { margin: 0; font-size: 1.15rem; line-height: 1.25; }
+
+.lumen-player__clock {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--lumen-ink);
+
+  &.is-low { color: #b3261e; }
+  &.is-ended { color: var(--lumen-ink-soft); }
+}
+
+.lumen-player__actions { display: flex; align-items: center; gap: 12px; }
+
+.lumen-player__save {
+  font-size: 0.82rem;
+  color: var(--lumen-ink-soft);
+  min-width: 5em;
+  text-align: right;
+
+  &[data-state="saving"] { color: var(--lumen-accent); }
+  &[data-state="error"] { color: #b3261e; }
+}
+
+.lumen-player__cases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.lumen-player__case {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--lumen-line);
+  border-radius: 18px;
+  background: var(--lumen-surface);
+  color: var(--lumen-ink-soft);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &.is-visited { color: var(--lumen-ink); }
+  &.is-answered { border-color: var(--lumen-accent); color: var(--lumen-accent); }
+  &.is-current { background: var(--lumen-accent); border-color: var(--lumen-accent); color: #fff; }
+}
+
+.lumen-player__body {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+  gap: 18px;
+  align-items: start;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.lumen-player__viewer {
+  background: #0b0c0e;
+  border-radius: var(--lumen-radius);
+  overflow: hidden;
+  border: 1px solid var(--lumen-line);
+}
+
+.lumen-player__stage {
+  position: relative;
+  height: min(72vh, 760px);
+  overflow: hidden;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.05s linear;
+    will-change: transform;
+  }
+
+  .is-window & { cursor: crosshair; }
+}
+
+.lumen-player__noimage { color: #8a9094; margin: 0; }
+
+.lumen-player__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #16181b;
+  border-top: 1px solid #26292d;
+}
+
+.lumen-player__images,
+.lumen-player__viewtools {
+  display: flex;
+  gap: 6px;
+
+  button {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #33373c;
+    border-radius: 6px;
+    background: #1f2226;
+    color: #d5d9dc;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:hover { border-color: #8a9094; }
+    &.is-active { background: var(--lumen-accent); border-color: var(--lumen-accent); color: #fff; }
+  }
+}
+
+.lumen-player__panel {
+  background: var(--lumen-surface);
+  border: 1px solid var(--lumen-line);
+  border-radius: var(--lumen-radius);
+  padding: 18px 20px;
+}
+
+.lumen-player__count { margin: 0 0 4px; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--lumen-ink-soft); }
+.lumen-player__casetitle { margin: 0 0 8px; font-size: 1.05rem; }
+.lumen-player__brief { margin: 0 0 10px; font-size: 1.02rem; }
+.lumen-player__instruction { margin: 0 0 14px; color: var(--lumen-ink-soft); }
+
+.lumen-player__label { display: block; margin: 14px 0 6px; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--lumen-ink-soft); }
+
+.lumen-player__report {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--lumen-line);
+  border-radius: var(--lumen-radius);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+
+  &:focus { outline: 2px solid var(--lumen-accent); outline-offset: 1px; }
+  &[readonly] { background: var(--lumen-ground); }
+}
+
+.lumen-player__model {
+  padding: 12px 14px;
+  background: var(--lumen-ground);
+  border-left: 3px solid var(--lumen-accent);
+  border-radius: var(--lumen-radius);
+
+  p { margin: 0 0 8px; &:last-child { margin: 0; } }
+}
+
+.lumen-player__mark { margin-top: 16px; }
+.lumen-player__markrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+
+  input {
+    width: 90px;
+    padding: 8px 10px;
+    border: 1px solid var(--lumen-line);
+    border-radius: var(--lumen-radius);
+    font: inherit;
+  }
+}
+.lumen-player__markstate { font-size: 0.85rem; color: var(--lumen-ink-soft); }
+.lumen-player__hint { margin: 6px 0 0; font-size: 0.85rem; color: var(--lumen-ink-soft); }
+.lumen-player__total { margin: 16px 0 0; font-size: 1.05rem; }
+
+.lumen-player__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; }
+
+.lumen-player__keys { margin: 16px 0 0; font-size: 0.8rem; color: var(--lumen-ink-soft); }
+
+.lumen-player__notice {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: #fff7ed;
+  border: 1px solid #f5d0a9;
+  border-radius: var(--lumen-radius);
+  color: #7a4a10;
+}

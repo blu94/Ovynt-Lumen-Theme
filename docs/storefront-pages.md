@@ -55,11 +55,14 @@ It does not error.
 - **An expired window** — the papers are withheld and access renewal is offered. Their answers
   are kept; buying again starts a fresh window.
 
-## The Start button is still disabled
+## Opening a paper
 
-Opening a paper is a *write* — it creates the attempt that freezes the case list. The server side
-of that write now exists: core's `storefront.actions` seam (`ISSUES-CORE.md` C14) carries six
-actions this theme declares, listed in the README. What does not exist yet is the player page
-that calls them — the timer, the image viewer, the report box and the self-marking screen — so
-the button stays disabled with an explanation rather than becoming a link to a page that is not
-there. Nothing else on these pages is waiting on it.
+**Start**, **Resume** and **Review** link to `/exam/{slug}/{paper}`, the player. It needs no
+Page: the address is resolved by the theme and rendered by its own template. Opening it is a
+write — it creates the sitting that freezes the case list — and the page makes that call itself,
+so a candidate who opens the same paper in two tabs gets one sitting, not two. What the player
+does, and which keys it answers to, is in the README.
+
+The **Switch to timed mode** control on the exam page clears every report and sitting under that
+exam after a confirm; the wording says so before it happens. **Return to practice mode** appears
+only when the theme setting *Allow Returning to Practice* is on, and clears just the same.

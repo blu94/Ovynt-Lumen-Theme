@@ -20,12 +20,26 @@ Vue-CDN conventions.
 | Testimonials — a module of curated quotes, and a block that renders the published ones | Built |
 | The exam's own address — `/exam/{slug}`, served through core's `storefront.paths` seam | Built |
 | **Sitting a paper — the server side**: open, progress, end, report, self-mark, switch mode, as six `storefront.actions` | Built, exercised end to end against the running install |
-| **Sitting a paper — the player UI**: timer, image viewer, report box, self-marking screen | **Not built** |
+| **Sitting a paper — the player**: `/exam/{slug}/{paper}`, timer, image viewer, report box, self-marking, mode switch | Built, driven in the browser |
 | Expiry reminders | Declared, not sent — needs a scheduled job |
 
-A candidate can buy an exam, be granted access, and open it at its own address today. The writes
-a sitting needs all exist and are reachable; the page that drives them is the piece still to
-build, which is why the Start button is still rendered disabled.
+A candidate can buy an exam, be granted access, open it at its own address, sit each paper
+against the clock, and mark themselves against the model answers.
+
+## The player
+
+`/exam/{slug}/{paper}` resolves the paper (the same `ExamPath` resolver, template
+`pages/exam-paper.blade.php`) and mounts one Vue app from `frontend/assets/js/player.js`. It
+opens the sitting with `attempts.open`, pings `attempts.progress` on the interval the theme
+setting names, autosaves each report with `answers.save`, ends with `attempts.end`, and marks with
+`answers.mark`. The image viewer is dependency-free: drag to pan, wheel or `+`/`-` to zoom, `R`
+to rotate, `W` then drag for window/level, `F` to fit, `←`/`→` between cases. Signed image links
+live ten minutes, so the page re-opens the sitting every eight to refresh them, and once more on
+any image that fails to load.
+
+The page never decides anything the server decides: a timed paper that reaches zero locally
+calls `attempts.end` and shows whatever came back, and a ping that answers `ended` moves the page
+to review. The mode switch on the papers page is one confirm and one call to `enrolments.mode`.
 
 ## How a sitting reaches the server
 

@@ -34,8 +34,14 @@ class ExamPapers
         $data      = $data ?? [];
         $candidate = CurrentCandidate::get();
 
+        // Theme settings, shared by the renderer for every view of the request — a driver's
+        // own View::make() does not inherit the page's variables.
+        $settings = View::shared('settings');
+        $settings = is_array($settings) ? $settings : [];
+
         $view = fn (array $extra) => View::make($themeViewPath, array_merge([
             'signedIn'       => $candidate !== null,
+            'allowReversal'  => (bool) ($settings['allow_mode_reversal'] ?? false),
             'chooserHeading' => $this->translate($data['chooser_heading'] ?? null, $locale),
             'lockedText'     => $this->translate($data['locked_text'] ?? null, $locale),
             'showScores'     => (bool) ($data['show_scores'] ?? true),

@@ -54,6 +54,58 @@
                     <p class="lumen-papers__expiry">{{ __('Access until') }} {{ $exam['expiresOn'] }}</p>
                 @endif
 
+                {{--
+                    Practice or timed is the candidate's choice, and switching clears every report and
+                    sitting — the server does the clearing (enrolments.mode), this only asks first.
+                    Returning to practice is offered only when the operator allows it.
+                --}}
+                <script>
+                    // One confirm, one action (enrolments.mode), one reload. Bound once per page
+                    // however many blocks render, and only to buttons this block draws.
+                    if (!window.__lumenModeSwitch) {
+                        window.__lumenModeSwitch = true;
+                        document.addEventListener('click', async function (e) {
+                            var btn = e.target.closest ? e.target.closest('[data-lumen-mode]') : null;
+                            if (!btn) return;
+                            e.preventDefault();
+                            var ask = btn.getAttribute('data-confirm');
+                            if (ask && !window.confirm(ask)) return;
+                            btn.disabled = true;
+                            try {
+                                await window.ThemeApi.request('/api/storefront/actions/enrolments.mode', 'POST', {
+                                    exam: btn.getAttribute('data-exam'),
+                                    mode: btn.getAttribute('data-lumen-mode')
+                                });
+                                window.location.reload();
+                            } catch (err) {
+                                btn.disabled = false;
+                                var data = (err && err.data) || {};
+                                var first = data.errors ? Object.values(data.errors).flat()[0] : null;
+                                window.alert(first || data.message || @json(__('That could not be saved. Please try again.')));
+                            }
+                        });
+                    }
+                </script>
+
+                @if($exam['mode'] === 'practice')
+                    <div class="lumen-papers__mode">
+                        <span>{{ __('Practice mode is untimed. Switch to timed mode when you are ready to sit against the clock — this clears everything you have written and restarts every paper.') }}</span>
+                        <button class="lumen-btn lumen-btn--ghost" type="button"
+                                data-lumen-mode="timed" data-exam="{{ $exam['slug'] }}"
+                                data-confirm="{{ __('Switch to timed mode? Every report and sitting under this exam will be cleared and the clocks restarted.') }}">
+                            {{ __('Switch to timed mode') }}
+                        </button>
+                    </div>
+                @elseif($allowReversal)
+                    <div class="lumen-papers__mode">
+                        <button class="lumen-btn lumen-btn--ghost" type="button"
+                                data-lumen-mode="practice" data-exam="{{ $exam['slug'] }}"
+                                data-confirm="{{ __('Return to practice mode? Every report and sitting under this exam will be cleared.') }}">
+                            {{ __('Return to practice mode') }}
+                        </button>
+                    </div>
+                @endif
+
                 @if(empty($papers))
                     <div class="lumen-notice">
                         <p>{{ __('This exam has no papers yet.') }}</p>
@@ -80,25 +132,21 @@
 
                                 <div class="lumen-paper__action">
                                     {{--
-                                        Not a link yet, and deliberately not a dead one. Opening a paper
-                                        is a write — it creates the attempt that freezes the case list —
-                                        and a theme cannot register a route to accept it. Rendering a
-                                        button that 404s would be worse than saying so.
+                                        /exam/{slug}/{paper} — the player, served through storefront.paths.
+                                        Opening it is the write that freezes the case list; the page makes
+                                        that call itself (attempts.open), so this is an ordinary link.
                                     --}}
-                                    <button class="lumen-btn lumen-btn--disabled" type="button" disabled
-                                            title="{{ __('The exam player is not available yet.') }}">
+                                    <a class="lumen-btn" href="/exam/{{ urlencode($exam['slug']) }}/{{ urlencode($paper['slug']) }}">
                                         @switch($paper['state'])
                                             @case('review') {{ __('Review') }} @break
                                             @case('resume') {{ __('Resume') }} @break
                                             @default {{ __('Start') }}
                                         @endswitch
-                                    </button>
+                                    </a>
                                 </div>
                             </li>
                         @endforeach
                     </ol>
-
-                    <p class="lumen-papers__note">{{ __('Opening a paper is coming soon.') }}</p>
                 @endif
         @endswitch
     </div>
