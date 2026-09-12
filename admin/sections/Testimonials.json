@@ -1,0 +1,72 @@
+{
+  "type": "TESTIMONIALS_SECTION",
+  "component": "TestimonialsSection",
+  "name": "Testimonials",
+  "description": "Published quotes from the Testimonials module — a grid of cards with a star rating, a name and a line about the candidate. Draft quotes never render.",
+  "ui": { "icon": "tabler-quote" },
+  "contents": {
+    "elements": [
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "heading",
+        "type": "text",
+        "label": "Heading",
+        "placeholder": "e.g. What candidates say",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "intro",
+        "type": "textarea",
+        "label": "Intro",
+        "placeholder": "One line under the heading",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "limit",
+        "type": "number",
+        "label": "Maximum Shown",
+        "default": 6,
+        "hint": "Published quotes, in the order set on each",
+        "rules": ["nullable", "integer", "min:1", "max:30"]
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "columns",
+        "type": "select",
+        "label": "Columns",
+        "default": "3",
+        "options": {
+          "items": [
+            { "title": "Two", "value": "2" },
+            { "title": "Three", "value": "3" }
+          ]
+        }
+      }
+    ]
+  },
+  "settings": {
+    "elements": [
+      {
+        "ui": { "type": "section", "cols": 12 },
+        "name": "General",
+        "elements": [
+          {
+            "ui": { "type": "field", "cols": 6 },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Disabled", "value": "disabled" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$ref": "form.json",
+  "sidebar": {
+    "footer": {
+      "elements": [
+        {
+          "ui": { "type": "row", "dense": true },
+          "elements": [
+            {
+              "ui": { "type": "button", "color": "primary", "icon": "tabler-plus" },
+              "action": "save",
+              "label": "Add Testimonial",
+              "redirect": "/module/testimonials"
+            },
+            {
+              "ui": { "type": "button", "color": "secondary", "variant": "tonal", "icon": "tabler-arrow-left" },
+              "action": "cancel",
+              "label": "Cancel",
+              "redirect": "/module/testimonials"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

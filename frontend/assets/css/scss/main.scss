@@ -324,3 +324,168 @@ a {
 
 .lumen-chip--practice { color: var(--lumen-ink-soft); }
 .lumen-chip--timed { color: var(--lumen-accent); }
+
+// ---------------------------------------------------------------------------
+// Forms — the DynamicForm component, and the Inquiry Form block around it
+// ---------------------------------------------------------------------------
+
+[v-cloak] { display: none; }
+
+.lumen-inquiry { padding: 48px 0; }
+
+.lumen-inquiry__heading {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.lumen-inquiry__intro {
+  margin: 0 0 28px;
+  color: var(--lumen-ink-soft);
+  max-width: 62ch;
+}
+
+.lumen-form {
+  max-width: 640px;
+  background: var(--lumen-surface);
+  border: 1px solid var(--lumen-line);
+  border-radius: var(--lumen-radius);
+  padding: 24px 26px;
+}
+
+.lumen-form__title {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.lumen-form__desc,
+.lumen-form__hint {
+  margin: 0;
+  color: var(--lumen-ink-soft);
+  font-size: 0.88rem;
+}
+
+.lumen-form__desc { margin-bottom: 18px; }
+
+.lumen-form__body { display: grid; gap: 16px; }
+
+.lumen-form__field { display: grid; gap: 6px; }
+
+.lumen-form__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.lumen-form__input {
+  width: 100%;
+  font: inherit;
+  padding: 9px 12px;
+  border: 1px solid var(--lumen-line);
+  border-radius: var(--lumen-radius);
+  background: var(--lumen-surface);
+  color: var(--lumen-ink);
+
+  &:focus-visible { outline: 2px solid var(--lumen-accent); outline-offset: 1px; }
+
+  // A value the page filled in and locked — the case a report is about.
+  &[readonly] { background: var(--lumen-ground); color: var(--lumen-ink-soft); }
+}
+
+textarea.lumen-form__input { min-height: 120px; resize: vertical; }
+
+.lumen-form__choices { display: grid; gap: 6px; }
+
+.lumen-form__choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.lumen-form__submit {
+  justify-self: start;
+  cursor: pointer;
+  font: inherit;
+
+  &:disabled { opacity: 0.6; cursor: default; }
+}
+
+.lumen-form__state {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--lumen-ink-soft);
+
+  &--error { color: #a92a1f; }
+  &--success { color: #2c6a4d; }
+}
+
+// ---------------------------------------------------------------------------
+// Testimonials
+// ---------------------------------------------------------------------------
+
+.lumen-testimonials { padding: 48px 0; }
+
+.lumen-testimonials__heading {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.lumen-testimonials__intro {
+  margin: 0 0 28px;
+  color: var(--lumen-ink-soft);
+  max-width: 62ch;
+}
+
+.lumen-testimonials__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  &--2 { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+}
+
+.lumen-testimonial {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  margin: 0;
+  background: var(--lumen-surface);
+  border: 1px solid var(--lumen-line);
+  border-left: 3px solid var(--lumen-accent);
+  border-radius: var(--lumen-radius);
+  padding: 20px 22px;
+}
+
+.lumen-testimonial__stars {
+  display: flex;
+  gap: 2px;
+  color: var(--lumen-accent);
+}
+
+.lumen-testimonial__quote {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+
+  &::before { content: "\201C"; }
+  &::after { content: "\201D"; }
+}
+
+.lumen-testimonial__by {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  font-size: 0.9rem;
+}
+
+.lumen-testimonial__author { font-weight: 600; }
+
+.lumen-testimonial__role { color: var(--lumen-ink-soft); }

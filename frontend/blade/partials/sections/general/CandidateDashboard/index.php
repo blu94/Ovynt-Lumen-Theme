@@ -10,6 +10,7 @@ use App\Models\Product;
 use Theme\Backend\Models\ExamCase;
 use Theme\Backend\Models\PaperAttempt;
 use Theme\Backend\Support\CurrentCandidate;
+use Theme\Backend\Support\TranslatesSectionData;
 
 /**
  * The signed-in candidate's own exams.
@@ -21,17 +22,20 @@ use Theme\Backend\Support\CurrentCandidate;
  */
 class CandidateDashboard
 {
+    use TranslatesSectionData;
+
     public function render(?array $data, string $locale, string $themeViewPath): string
     {
-        $data = $data ?? [];
+        $data    = $data ?? [];
+        $heading = $this->translate($data['heading'] ?? null, $locale);
 
         $candidate = CurrentCandidate::get();
 
         if ($candidate === null) {
             return View::make($themeViewPath, [
                 'signedIn'      => false,
-                'heading'       => $data['heading'] ?? null,
-                'signedOutText' => $data['signed_out_text'] ?? null,
+                'heading'       => $heading,
+                'signedOutText' => $this->translate($data['signed_out_text'] ?? null, $locale),
                 'rows'          => [],
                 'emptyText'     => null,
             ])->render();
@@ -53,10 +57,10 @@ class CandidateDashboard
         if ($enrolments->isEmpty()) {
             return View::make($themeViewPath, [
                 'signedIn'      => true,
-                'heading'       => $data['heading'] ?? null,
+                'heading'       => $heading,
                 'signedOutText' => null,
                 'rows'          => [],
-                'emptyText'     => $data['empty_text'] ?? null,
+                'emptyText'     => $this->translate($data['empty_text'] ?? null, $locale),
             ])->render();
         }
 
@@ -136,7 +140,7 @@ class CandidateDashboard
 
         return View::make($themeViewPath, [
             'signedIn'      => true,
-            'heading'       => $data['heading'] ?? null,
+            'heading'       => $heading,
             'signedOutText' => null,
             'emptyText'     => null,
             'rows'          => $rows,

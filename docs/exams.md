@@ -26,9 +26,8 @@ thinks of as one thing.
 | **Target Score (%)** | The percentage of the maximum shown before they have a score of their own. |
 | **Stated Duration** | Display only. Each paper carries the timer that actually runs. |
 
-5. Add its **Papers** in the repeater on the same tab.
-
-Then build each paper's **Cases** from the Cases screen.
+5. Add its **Papers** in the repeater on the same tab, and each paper's **Cases** inside the
+   paper's own dialog.
 
 ## Papers live on this tab
 
@@ -52,10 +51,30 @@ candidate was served, and it hangs off that row — losing it would destroy thei
 Papers screen refused the delete with a message; a repeater row has nowhere to show one, so it
 reaches the same outcome quietly.
 
-**Cases are deliberately not on this tab.** A repeater *can* nest, but a paper holds ten to forty
-cases, each with images and a rich-text model answer. Putting those two dialogs deep would carry
-an entire exam's content in every product save, so cases keep their own screen, filtered by
-paper.
+## Cases live inside the paper
+
+Open a paper and its **Cases** table is at the bottom of the dialog. **Add Case** opens a second
+dialog on top of the first — the whole exam is authored on the one screen, and the product saves
+all of it together.
+
+| Field | What it does |
+|---|---|
+| **Case Images** | The studies to report, in the order they should be read — a plain film and its lateral are a sequence, not a set. Stored on the private disk: never served from a public folder, and every view is a short-lived signed link. |
+| **Case Title** | Staff-facing. Candidates see cases numbered in order, not by title. |
+| **Status** | Inactive removes it from new sittings only. |
+| **Clinical Brief** | The context the candidate is given before looking at the images. |
+| **Reporting Instruction** | Shown directly above the report box. |
+| **Maximum Score** | The ceiling a self-mark is validated against. Half marks allowed. |
+| **Model Answer** | Rich text. Never sent to a candidate while their paper is open — it is absent from what the sitting is served, not merely hidden — and read only once they end the paper. |
+
+**The thumbnail after an upload is currently blank.** That is a defect in Ovynt's admin, not a
+lost upload: the file is stored and attached when you save, and the **Images** count on the case
+row is the check that it was.
+
+**A case somebody has answered is never removed.** Delete its row and it is kept and set
+**Inactive** instead, so their report and mark survive; the activity log records why. Anything
+unanswered is soft-deleted, and a finished sitting still replays it from the sitting's own frozen
+copy either way.
 
 ## The price is the product's, and there is only one
 

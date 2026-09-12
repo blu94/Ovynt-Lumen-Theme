@@ -20,6 +20,36 @@
     @endif
 
     <style>:root{--lumen-accent: {{ $accent }};}</style>
+
+    {{--
+        Vue 3, in the head and synchronous, because core's own sections — the login and
+        register forms, the cart — carry inline scripts that call window.Vue as they parse.
+        Loaded at the end of the body it arrives after them, and every one of those forms
+        dies with "Vue is not defined". Self-hosted when the storefront bundle has been built
+        into this theme, from the CDN when it has not; guarded rather than assumed.
+    --}}
+    @php $vuePath = "themes/{$themeSlug}/frontend/assets/js/vendor/vue.global.prod.js"; @endphp
+    @if(file_exists(public_path($vuePath)))
+        <script src="{{ asset($vuePath) }}?v={{ filemtime(public_path($vuePath)) }}{{ $assetRevSuffix }}"></script>
+    @else
+        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    @endif
+
+    {{--
+        The theme API core's sections call — window.ThemeApi.auth.login() and its siblings.
+        Authored in the theme, like Ella's and Saffron's: core ships the forms and the theme
+        ships the client that talks to /api for them. Without it the login form throws before
+        it sends anything, and shows "Invalid credentials" for a password that was right.
+    --}}
+    @php $apiJsPath = "themes/{$themeSlug}/frontend/assets/js/api.js"; @endphp
+    <script src="{{ asset($apiJsPath) }}?v={{ file_exists(public_path($apiJsPath)) ? filemtime(public_path($apiJsPath)) : '' }}{{ $assetRevSuffix }}"></script>
+
+    {{-- The token cookie is HttpOnly, so script cannot read it; the server says whether one is present. --}}
+    <script>window.OvyntAuthHint = @json((bool) (request()->cookie('customer_access_token') ?: ($_COOKIE['customer_access_token'] ?? null)));</script>
+
+    @if(file_exists(public_path($sfPath = "themes/{$themeSlug}/frontend/assets/js/storefront.min.js")))
+        <script src="{{ asset($sfPath) }}?v={{ filemtime(public_path($sfPath)) }}{{ $assetRevSuffix }}"></script>
+    @endif
 </head>
 <body>
     @include('partials.layout.header')
@@ -29,22 +59,6 @@
     </main>
 
     @include('partials.layout.footer')
-
-    {{--
-        Vue 3, self-hosted when the storefront bundle has been built into this theme and from
-        the CDN when it has not. Guarded rather than assumed: a viewer that silently fails
-        because a network blocked unpkg is worse than one that never shipped.
-    --}}
-    @php $vuePath = "themes/{$themeSlug}/frontend/assets/js/vendor/vue.global.prod.js"; @endphp
-    @if(file_exists(public_path($vuePath)))
-        <script src="{{ asset($vuePath) }}?v={{ filemtime(public_path($vuePath)) }}{{ $assetRevSuffix }}"></script>
-    @else
-        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-    @endif
-
-    @if(file_exists(public_path($sfPath = "themes/{$themeSlug}/frontend/assets/js/storefront.min.js")))
-        <script src="{{ asset($sfPath) }}?v={{ filemtime(public_path($sfPath)) }}{{ $assetRevSuffix }}"></script>
-    @endif
 
     @stack('scripts')
 </body>

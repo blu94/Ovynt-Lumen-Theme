@@ -57,7 +57,7 @@
 
                             @switch($card['state'])
                                 @case('open')
-                                    <a class="lumen-btn" href="/exam?e={{ urlencode($card['slug']) }}">{{ __('Open') }}</a>
+                                    <a class="lumen-btn" href="/exam/{{ urlencode($card['slug']) }}">{{ __('Open') }}</a>
                                     @if($card['expiresOn'])
                                         <span class="lumen-card__note">{{ __('Access until') }} {{ $card['expiresOn'] }}</span>
                                     @endif
@@ -71,7 +71,7 @@
                                     @break
 
                                 @case('free')
-                                    <a class="lumen-btn" href="/exam?e={{ urlencode($card['slug']) }}">{{ __('Start') }}</a>
+                                    <a class="lumen-btn" href="/exam/{{ urlencode($card['slug']) }}">{{ __('Start') }}</a>
                                     @break
 
                                 @default

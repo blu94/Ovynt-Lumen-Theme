@@ -2,6 +2,7 @@
 
 namespace Theme\Backend\Handlers;
 
+use App\Contracts\Module\ModuleFieldHandler;
 use Illuminate\Database\Eloquent\Model;
 use Theme\Backend\Models\Exam;
 
@@ -17,7 +18,7 @@ use Theme\Backend\Models\Exam;
  * the theme's own namespace. None of that is defended against here; it is core's job and it has
  * already happened by the time either method runs.
  */
-class ExamContributions
+class ExamContributions implements ModuleFieldHandler
 {
     /**
      * What the Exam tab shows when the product form opens.

@@ -1,0 +1,67 @@
+{
+  "type": "INQUIRY_FORM_SECTION",
+  "component": "InquiryFormSection",
+  "name": "Inquiry Form",
+  "description": "A form from the Forms module, placed on a page: contact, site feedback, a case report. Submissions land in Leads. A signed-in candidate's name and email are filled in for them, and a case-report link fills in the exam, paper and case it was raised from.",
+  "ui": { "icon": "tabler-mail" },
+  "contents": {
+    "elements": [
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "form_slug",
+        "type": "text",
+        "label": "Form",
+        "placeholder": "e.g. contact",
+        "hint": "The slug of a form under Forms. The theme's starter forms are contact, site-feedback and case-report",
+        "rules": ["required", "max:120"]
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "heading",
+        "type": "text",
+        "label": "Heading",
+        "placeholder": "e.g. Get in touch",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 12 },
+        "key": "intro",
+        "type": "textarea",
+        "label": "Intro",
+        "placeholder": "One or two lines above the form",
+        "translatable": true
+      },
+      {
+        "ui": { "type": "field", "cols": 6 },
+        "key": "show_form_title",
+        "type": "switch",
+        "label": "Show the form's own title",
+        "hint": "Off when the heading above already says what the form is for",
+        "default": false
+      }
+    ]
+  },
+  "settings": {
+    "elements": [
+      {
+        "ui": { "type": "section", "cols": 12 },
+        "name": "General",
+        "elements": [
+          {
+            "ui": { "type": "field", "cols": 6 },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "active",
+            "options": {
+              "items": [
+                { "title": "Active", "value": "active" },
+                { "title": "Disabled", "value": "disabled" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

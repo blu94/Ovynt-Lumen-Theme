@@ -10,24 +10,39 @@ nothing to explain why. Create these once, under **Pages**, and drop the section
 | `exam` | Exam Papers | One exam's papers for the candidate who holds access |
 | `dashboard` | Candidate Dashboard | The candidate's own exams, progress and score |
 
-The slugs are not cosmetic: the theme's own links point at `/exams`, `/exam?e={slug}` and
-`/dashboard`, so they have to match.
+The slugs are not cosmetic: the theme's own links point at `/exams` and `/dashboard`, so those
+two have to match. The exam itself is at `/exam/{slug}` — an address the theme serves through
+core's `storefront.paths` seam, not a Page — but the `exam` Page is the **layout** every one of
+those addresses renders with, and it is what the bare `/exam` shows. Leave it out and every exam
+page is blank.
 
-## Why the exam page uses `?e=` instead of `/exam/{slug}`
+Two more blocks go wherever you like, with no slug to get right:
 
-A prettier address is not available to any Ovynt package, and it is worth knowing why rather
-than assuming it was laziness.
+| Block | What it does |
+|---|---|
+| Inquiry Form | A form from the Forms module — contact, feedback, a case report — with the signed-in candidate's details filled in. See [forms.md](forms.md) |
+| Testimonials | Published quotes from the Testimonials module. See [testimonials.md](testimonials.md) |
 
-Core resolves a storefront path through a fixed sequence — the site root, a Page by slug, then
-three hard-coded prefixes (`blog/`, `collections/`, `products/`). There is no registry a theme
-can add to. The one event in that area, `PathNotResolved`, is a **redirect** seam and says so
-outright: a listener "cannot write the response". And a theme cannot subscribe to events at all.
+`DemoExamSeeder` creates the three pages above with their blocks, and `StarterFormsSeeder`
+creates `/contact`, `/feedback` and `/report-a-case` with an Inquiry Form each; both are run by
+hand and described in the theme README.
 
-So the only address a theme can serve is one core already resolves: an ordinary Page. The exam is
-named in the query string instead of the path. It works, it is bookmarkable, and it is honest
-about the constraint. The fix is a core change, recorded as `ISSUES-CORE.md` C8.
+## How `/exam/{slug}` is served, and why it once was `?e=`
 
-## What the Exam Papers page does with no `?e=`
+Core resolves a storefront path through a fixed sequence — the site root, a Page by slug, a
+package's own prefixes, then three of core's own (`blog/`, `collections/`, `products/`). The
+package step is the `storefront.paths` seam: this theme's `manifest.json` declares the prefix
+`exam` and the class `backend/Storefront/ExamPath.php`, which answers with the product that
+carries an exam switched on. Core renders the answer with `pages/exam.blade.php`, guards it as
+customer-only — a stranger is sent to `/login?redirect=…` — and never caches it publicly.
+
+That step did not exist when the theme was first written; core's list could not be added to,
+and `PathNotResolved` is a redirect seam that "cannot write the response". So the exam was named
+in a query string on a Page — `/exam?e={slug}` — recorded as `ISSUES-CORE.md` C8 and since
+built. The Exam Papers block still honours `?e=` as a fallback, for links written before the
+seam and for a core too old to have it, and the `exam` Page is still needed: it is the layout.
+
+## What the Exam Papers page does with no exam named
 
 It does not error.
 
@@ -40,11 +55,11 @@ It does not error.
 - **An expired window** — the papers are withheld and access renewal is offered. Their answers
   are kept; buying again starts a fresh window.
 
-## The Start button is disabled, on purpose
+## The Start button is still disabled
 
-Opening a paper is a *write* — it creates the attempt that freezes the case list — and a theme
-cannot register a route to accept one. The button is therefore rendered disabled with an
-explanation rather than as a link that 404s.
-
-It becomes live when core gains the storefront-write seam (`ISSUES-CORE.md` C1). Nothing else on
-these pages is waiting on it.
+Opening a paper is a *write* — it creates the attempt that freezes the case list. The server side
+of that write now exists: core's `storefront.actions` seam (`ISSUES-CORE.md` C14) carries six
+actions this theme declares, listed in the README. What does not exist yet is the player page
+that calls them — the timer, the image viewer, the report box and the self-marking screen — so
+the button stays disabled with an explanation rather than becoming a link to a page that is not
+there. Nothing else on these pages is waiting on it.

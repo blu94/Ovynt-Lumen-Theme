@@ -98,7 +98,7 @@
             "icon": "tabler-list-numbers"
           },
           "name": "Papers",
-          "subtitle": "A paper is a timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one has been ended. Drag to reorder; that is the order candidates meet them in. Build each paper's cases from the Cases screen.",
+          "subtitle": "A paper is a timed set of cases — the thing a candidate actually opens, times and finishes. An exam's papers each end independently, and the exam is complete once every one has been ended. Drag to reorder; that is the order candidates meet them in. Open a paper to add its cases — each case's images, brief and model answer live inside the paper's own dialog.",
           "elements": [
             {
               "ui": {

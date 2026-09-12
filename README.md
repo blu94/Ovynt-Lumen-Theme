@@ -11,29 +11,53 @@ Vue-CDN conventions.
 
 | Area | State |
 |---|---|
-| Exams and papers as an Exam tab on Products; cases on their own screen | Built, verified against a running install |
+| Exams, papers and cases on one screen — the product's Exam tab, cases nested inside each paper | Built, verified in the browser end to end |
 | Enrolments — staff grant, per-paper progress, guarded edits | Built |
 | Selling access — core product, checkout, enrolment written in the order's transaction | Built |
 | Notifications — access granted, new enrolment | Built |
 | Storefront — exam catalogue and candidate dashboard, server-rendered | Built |
-| **Sitting a paper — timer, report box, image viewer, self-marking** | **Not built. Blocked on core** |
+| Contact, feedback and case-report forms — core's Forms module, placed by an Inquiry Form block | Built |
+| Testimonials — a module of curated quotes, and a block that renders the published ones | Built |
+| The exam's own address — `/exam/{slug}`, served through core's `storefront.paths` seam | Built |
+| **Sitting a paper — the server side**: open, progress, end, report, self-mark, switch mode, as six `storefront.actions` | Built, exercised end to end against the running install |
+| **Sitting a paper — the player UI**: timer, image viewer, report box, self-marking screen | **Not built** |
 | Expiry reminders | Declared, not sent — needs a scheduled job |
 
-A candidate can buy an exam and be granted access today. They cannot yet sit it.
+A candidate can buy an exam, be granted access, and open it at its own address today. The writes
+a sitting needs all exist and are reachable; the page that drives them is the piece still to
+build, which is why the Start button is still rendered disabled.
 
-## Why the player is blocked
+## How a sitting reaches the server
 
-Sitting a paper is a sequence of writes from a signed-in candidate — enrol, save progress, end a
-paper, save a report, submit a self-mark — and **a theme cannot register a single HTTP route**.
-Ovynt states this in five separate files; a theme is weaker than a plugin, which cannot either.
+Sitting a paper is a sequence of writes from a signed-in candidate — open a paper, save progress,
+end it, save a report, submit a self-mark, switch mode — and **a theme cannot register a single
+HTTP route**. Ovynt states this in five separate files; a theme is weaker than a plugin, which
+cannot either.
 
-Reads are fine, which is why the catalogue and dashboard exist: the storefront renders theme
-Blade holding this theme's own repositories, and the signed-in candidate is resolved from the
-HttpOnly `customer_access_token` cookie (see `backend/Support/CurrentCandidate.php`).
+Core therefore owns one route, `POST /api/storefront/actions/{name}`, and this theme declares
+what lives behind it in `manifest.json` under `storefront.actions` — six classes in
+`backend/Storefront/Actions/`, one per write, each resolving the caller's enrolment and refusing
+with a 422 the page can show:
 
-Unblocking it needs one core change: a declarative storefront-write seam, shaped like the
-`checkout.guards` / `cart.line_pricer` / `checkout.writers` seams a theme already has. Tracked as
-item C1 in the build plan.
+| Action | Class | What it does |
+|---|---|---|
+| `attempts.open` | `OpenAttempt` | Start or resume a paper: freezes the case list into an attempt, returns the cases without their model answers |
+| `attempts.progress` | `SaveProgress` | The periodic ping. Time spent only grows, time left only shrinks; a timed paper ends itself at zero |
+| `attempts.end` | `EndAttempt` | End the paper and, only now, return the model answers |
+| `answers.save` | `SaveAnswer` | The report for one case, one row per case, refused once the paper has ended |
+| `answers.mark` | `MarkAnswer` | The self-mark, in half steps, against the ceiling the case carried when served |
+| `enrolments.mode` | `SwitchMode` | Practice to timed, clearing every answer and sitting; back again only if the operator allows it |
+
+Core keeps everything a package must not re-implement: who is asking (the storefront token —
+an admin's identifies nobody), whether they may ask, validation against each handler's own rules,
+a transaction that rolls back on any throw, the throttle and the JSON envelope. The design is the
+repository root's `STOREFRONT-PACKAGE-SEAMS-SPEC.md`; the register entries are `ISSUES-CORE.md`
+C8 and C14.
+
+Reads never needed any of this, which is why the catalogue and dashboard came first: the
+storefront renders theme Blade holding this theme's own repositories, and the signed-in
+candidate is resolved from the HttpOnly `customer_access_token` cookie (see
+`backend/Support/CurrentCandidate.php`).
 
 ## How it is put together
 
@@ -41,7 +65,7 @@ item C1 in the build plan.
 Product     IS the exam — title, price, tax, catalogue listing (core's own record)
 └── Exam tab   access window, target score, and the papers repeater
     └── Paper    a timed set of cases; THIS carries the clock that runs
-        └── Case   images, clinical brief, instruction, model answer (own screen)
+        └── Case   images, clinical brief, instruction, model answer (its own dialog, inside the paper's)
 ```
 
 Three tables, all prefixed `lumen_`, plus three for the candidate's side —
@@ -91,10 +115,13 @@ not check who is asking. Tracked as `ISSUES-CORE.md` C3.
 ## Pages the operator must create
 
 Three sections need a Page with an exact slug — `exams`, `exam` and `dashboard` — and nothing
-validates that at install. See [`docs/storefront-pages.md`](docs/storefront-pages.md), which also
-explains why the exam page is `/exam?e={slug}` rather than `/exam/{slug}`: core resolves
-storefront paths through a fixed list no package can extend, and `PathNotResolved` redirects
-rather than renders. Recorded as `ISSUES-CORE.md` C8.
+validates that at install. See [`docs/storefront-pages.md`](docs/storefront-pages.md).
+
+The exam itself lives at `/exam/{slug}`, resolved by `backend/Storefront/ExamPath.php` through
+core's `storefront.paths` seam and rendered by `frontend/blade/pages/exam.blade.php`. That
+template still draws the operator's `exam` Page — the Exam Papers block sits on it, and it is
+also what the bare `/exam` chooser shows — so the address is the package's and the layout stays
+the operator's.
 
 ## Working on it
 
@@ -103,29 +130,69 @@ rather than renders. Recorded as `ISSUES-CORE.md` C8.
 .\scripts\import-theme.ps1 -Theme lumen
 ```
 
-**Only `backend/` is live in local dev.** Section drivers, Blade templates and assets are read
-from the deployed tree, so those need an import before an edit does anything. An edit that
-"does nothing" is almost always this.
+**Nothing is live until it is imported.** Core reads a theme's PHP from the repository's `theme/`
+directory only when that directory is mounted into the container, and `docker-compose.dev.yml`
+does not mount it — so section drivers, Blade, assets *and* `backend/` all come from the deployed
+tree. An edit that "does nothing" is almost always a missing import. A change to any JSON schema
+or migration triggers a full re-install; anything else syncs just the changed files.
+
+### Demo content
+
+`backend/Seeders/DemoExamSeeder.php` writes one exam — two papers, seven cases with generated
+placeholder images on the protected disk — plus the three storefront pages, an enrolment for
+`user@ovynt.com` and a finished, self-marked sitting of Paper 1, so every screen has something to
+show. It goes through the theme's real handlers, is safe to re-run, and is invoked by hand:
+
+```powershell
+docker exec -u www-data ovynt_app php -r "require '/var/www/vendor/autoload.php'; `$app = require '/var/www/bootstrap/app.php'; `$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); print_r((new Theme\Backend\Seeders\DemoExamSeeder)->run());"
+```
+
+`backend/Seeders/StarterFormsSeeder.php` is the same idea for content a real site needs rather
+than demo data: the contact, site-feedback and case-report forms under Forms, and a page for
+each carrying an Inquiry Form block. Same invocation with `StarterFormsSeeder`; it never
+overwrites a form or page the operator already has.
+
+### Messages and testimonials
+
+Contact, feedback and case reports are core Forms placed by the theme's **Inquiry Form** block,
+so their fields and notifications are the operator's to change. A testimonial is *not* a form:
+candidates send feedback, which lands in Leads as correspondence, and what gets published is a
+row in the theme's **Testimonials** module — content somebody reviewed, with a status, a rating
+and an order — rendered by the **Testimonials** block. Modelling a thing by where it arrived
+rather than by what it is was the one habit of the source platform's inquiry inbox deliberately
+not carried across.
 
 The import script compiles `frontend/assets/css/scss/main.scss` to `theme.css` and refuses the
 import on three lints: a dead `@include`/`@extends` target, a section schema with no renderer,
 and drift between `admin/sections/*.json` and the manifest. `scss/` is excluded from the package,
 so **the compiled `theme.css` is what ships and must be committed**.
 
-## Two core defects this theme surfaced
+## Core defects this theme surfaced
 
-Both are recorded in the repository root's `ISSUES-CORE.md`:
+All are recorded in the repository root's `ISSUES-CORE.md`:
 
 - **C6** — `AssetRepository` hard-codes `'App\Models\' . class_basename()` for the morph type, so
-  a theme-owned model can never use core's media helpers. `ExamCaseRepository::attachImages()`
-  writes the polymorphic columns itself as a workaround.
+  a theme-owned model can never use core's media helpers. `ExamCases::attachImages()` writes the
+  polymorphic columns itself as a workaround.
 - **C7** — `CustomerToken` answers *whether* a customer is signed in but never *who*, so
   `CurrentCandidate` re-implements the cookie read to get the user.
+- **C8** — a package cannot serve a storefront path for its own entities, hence `/exam?e={slug}`.
+- **C9** — a package can only use the icons core's build already scanned; six of ours rendered blank.
+- **C10** — the admin dropzone previews a protected upload from `/api/assets/{id}/view`, a route
+  that does not exist, so every case image shows a broken thumbnail after upload. The upload and
+  the attach are fine; only the preview is dead.
+- **C11** — the active theme is cached forever under a Redis key nothing namespaces or heals; a
+  stale id silently hides the Exam tab and every other theme contribution while the storefront
+  keeps working.
+- **C12** — a contribution whose handler lacks `ModuleFieldHandler` renders its tab and drops every
+  value at save with only a log warning. This theme shipped that way until the save was run for real.
+- **C13** — the form's default seeding descends into repeaters, so a nested row's defaults land on
+  the parent payload.
 
 ## Documentation
 
 Operator guides ship in `docs/` and are served by Ovynt's own Documentation screen:
-`exams.md`, `exam-cases.md`, `enrolments.md`, `storefront-pages.md`.
+`exams.md`, `enrolments.md`, `testimonials.md`, `forms.md`, `storefront-pages.md`.
 
 ## Licence
 

@@ -12,15 +12,31 @@
     "sections": [
       "admin/sections/ExamCatalogue.json",
       "admin/sections/ExamPapers.json",
-      "admin/sections/CandidateDashboard.json"
+      "admin/sections/CandidateDashboard.json",
+      "admin/sections/InquiryForm.json",
+      "admin/sections/Testimonials.json"
     ]
   },
   "modules": [
-    "enrolments"
+    "enrolments",
+    "testimonials"
   ],
   "checkout": {
     "writers": [
       "Theme\\Backend\\Writers\\ExamEnrolmentWriter"
+    ]
+  },
+  "storefront": {
+    "paths": [
+      { "prefix": "exam", "resolver": "Theme\\Backend\\Storefront\\ExamPath" }
+    ],
+    "actions": [
+      { "name": "attempts.open",     "handler": "Theme\\Backend\\Storefront\\Actions\\OpenAttempt" },
+      { "name": "attempts.progress", "handler": "Theme\\Backend\\Storefront\\Actions\\SaveProgress" },
+      { "name": "attempts.end",      "handler": "Theme\\Backend\\Storefront\\Actions\\EndAttempt" },
+      { "name": "answers.save",      "handler": "Theme\\Backend\\Storefront\\Actions\\SaveAnswer" },
+      { "name": "answers.mark",      "handler": "Theme\\Backend\\Storefront\\Actions\\MarkAnswer" },
+      { "name": "enrolments.mode",   "handler": "Theme\\Backend\\Storefront\\Actions\\SwitchMode" }
     ]
   }
 }

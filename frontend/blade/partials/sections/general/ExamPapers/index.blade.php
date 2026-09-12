@@ -37,7 +37,7 @@
                 <h2 class="lumen-papers__heading">{{ $chooserHeading ?: __('Which exam?') }}</h2>
                 <ul class="lumen-papers__choices">
                     @foreach($choices as $choice)
-                        <li><a class="lumen-btn" href="/exam?e={{ urlencode($choice['slug']) }}">{{ $choice['title'] }}</a></li>
+                        <li><a class="lumen-btn" href="/exam/{{ urlencode($choice['slug']) }}">{{ $choice['title'] }}</a></li>
                     @endforeach
                 </ul>
                 @break

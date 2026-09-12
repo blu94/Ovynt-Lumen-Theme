@@ -59,13 +59,13 @@
                                         <a class="lumen-btn" href="/exams">{{ __('Renew access') }}</a>
                                         @break
                                     @case('review')
-                                        <a class="lumen-btn" href="/exam?e={{ urlencode($row['examSlug']) }}">{{ __('Review answers') }}</a>
+                                        <a class="lumen-btn" href="/exam/{{ urlencode($row['examSlug']) }}">{{ __('Review answers') }}</a>
                                         @break
                                     @case('resume')
-                                        <a class="lumen-btn" href="/exam?e={{ urlencode($row['examSlug']) }}">{{ __('Resume') }}</a>
+                                        <a class="lumen-btn" href="/exam/{{ urlencode($row['examSlug']) }}">{{ __('Resume') }}</a>
                                         @break
                                     @default
-                                        <a class="lumen-btn" href="/exam?e={{ urlencode($row['examSlug']) }}">{{ __('Start') }}</a>
+                                        <a class="lumen-btn" href="/exam/{{ urlencode($row['examSlug']) }}">{{ __('Start') }}</a>
                                 @endswitch
                             @endif
                         </div>

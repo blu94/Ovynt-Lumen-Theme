@@ -1,0 +1,16 @@
+{
+  "name": "Testimonials",
+  "type": "testimonials",
+  "routeBase": "module/testimonials",
+  "order": 24,
+  "icon": "tabler-quote",
+  "api": "/admin/modules/testimonials",
+  "resource": "modules",
+  "table": { "$ref": "index.json" },
+  "form": { "$ref": "form.json" },
+  "create": { "$ref": "create.json" },
+  "navigation": [
+    { "title": "All Testimonials", "icon": "tabler-circle", "to": "module-type" },
+    { "title": "Add Testimonial", "icon": "tabler-circle", "to": "module-type-create" }
+  ]
+}

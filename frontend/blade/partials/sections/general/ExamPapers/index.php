@@ -2,6 +2,7 @@
 
 namespace Theme\Sections\General;
 
+use App\Models\Product;
 use Illuminate\Support\Facades\View;
 use Theme\Backend\Models\CaseAnswer;
 use Theme\Backend\Models\Enrolment;
@@ -9,26 +10,25 @@ use Theme\Backend\Models\Exam;
 use Theme\Backend\Models\ExamPaper;
 use Theme\Backend\Models\PaperAttempt;
 use Theme\Backend\Support\CurrentCandidate;
+use Theme\Backend\Support\TranslatesSectionData;
 
 /**
  * One exam's papers, for the candidate who holds access to it.
  *
- * **Why this reads a query parameter instead of a path segment.** A theme cannot add a
- * storefront route, and core's path resolution is a fixed list — a page slug, then `blog/`,
- * `collections/` and `products/` (`ThemeController::render()`). `PathNotResolved` is a
- * *redirect* seam and says so: a listener "cannot write the response". So `/exam/{slug}` is
- * unreachable by any package, and the only address a theme can serve is one core already
- * resolves: an ordinary page.
+ * **Which exam.** The address is `/exam/{slug}`, served by core's `storefront.paths` seam
+ * through `backend/Storefront/ExamPath.php`: the product that resolved is shared as `$page`,
+ * and this driver reads it from there. The Page with slug `exam` still supplies the layout —
+ * this block sits on it — and answers the bare `/exam` chooser. `?e={slug}` is kept as a
+ * fallback for links written before the seam existed (`ISSUES-CORE.md` C8, now built), and
+ * for a core too old to have it.
  *
- * The page is therefore `/exam` — a real Page the operator creates, carrying this section —
- * and the exam is named in `?e={slug}`. Ugly next to `/exam/rapid-reporting`, and honest:
- * a prettier URL needs the core seam recorded as `ISSUES-CORE.md` C8.
- *
- * With no `?e=` it does not error. One enrolment goes straight through; several render a
+ * With neither it does not error. One enrolment goes straight through; several render a
  * chooser; none sends the reader back to the catalogue.
  */
 class ExamPapers
 {
+    use TranslatesSectionData;
+
     public function render(?array $data, string $locale, string $themeViewPath): string
     {
         $data      = $data ?? [];
@@ -36,8 +36,8 @@ class ExamPapers
 
         $view = fn (array $extra) => View::make($themeViewPath, array_merge([
             'signedIn'       => $candidate !== null,
-            'chooserHeading' => $data['chooser_heading'] ?? null,
-            'lockedText'     => $data['locked_text'] ?? null,
+            'chooserHeading' => $this->translate($data['chooser_heading'] ?? null, $locale),
+            'lockedText'     => $this->translate($data['locked_text'] ?? null, $locale),
             'showScores'     => (bool) ($data['show_scores'] ?? true),
             'exam'           => null,
             'papers'         => [],
@@ -58,11 +58,18 @@ class ExamPapers
             ->get()
             ->unique('product_id');
 
-        $wanted = trim((string) request()->query('e', ''));
+        // The resolved product first (storefront.paths shares it as `page`), the query string
+        // only when there is none. Matched by id when the record is known: a slug comparison
+        // across locales is a guess, an id is not.
+        $record   = View::shared('page');
+        $wantedId = $record instanceof Product ? (int) $record->id : null;
+        $wanted   = $wantedId !== null ? (string) $record->slug : trim((string) request()->query('e', ''));
 
-        $enrolment = $wanted !== ''
-            ? $enrolments->first(fn (Enrolment $e) => $e->product?->slug === $wanted)
-            : ($enrolments->count() === 1 ? $enrolments->first() : null);
+        $enrolment = $wantedId !== null
+            ? $enrolments->first(fn (Enrolment $e) => (int) $e->product_id === $wantedId)
+            : ($wanted !== ''
+                ? $enrolments->first(fn (Enrolment $e) => $e->product?->slug === $wanted)
+                : ($enrolments->count() === 1 ? $enrolments->first() : null));
 
         if ($enrolment === null) {
             // Asked for an exam they do not hold — including one that does not exist. The two

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Theme\Backend\Models\Enrolment;
 use Theme\Backend\Models\Exam;
 use Theme\Backend\Support\CurrentCandidate;
+use Theme\Backend\Support\TranslatesSectionData;
 
 /**
  * The exams on sale.
@@ -20,6 +21,8 @@ use Theme\Backend\Support\CurrentCandidate;
  */
 class ExamCatalogue
 {
+    use TranslatesSectionData;
+
     public function render(?array $data, string $locale, string $themeViewPath): string
     {
         $data = $data ?? [];
@@ -95,8 +98,8 @@ class ExamCatalogue
         })->values()->all();
 
         return View::make($themeViewPath, [
-            'heading'          => $data['heading'] ?? null,
-            'intro'            => $data['intro'] ?? null,
+            'heading'          => $this->translate($data['heading'] ?? null, $locale),
+            'intro'            => $this->translate($data['intro'] ?? null, $locale),
             'showPrice'        => (bool) ($data['show_price'] ?? true),
             'cards'            => $cards,
             'currencySymbol'   => $appSettings['currency_symbol'] ?? '$',

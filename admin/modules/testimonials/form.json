@@ -1,0 +1,117 @@
+{
+  "elements": [
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-quote" },
+      "name": "The Quote",
+      "subtitle": "What a candidate said, as it will appear on the storefront. A testimonial usually arrives through the site-feedback form and sits in Leads until somebody trims it and adds it here — the message stays in Leads as correspondence; this is the published version.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 12 },
+          "key": "quote",
+          "type": "textarea",
+          "label": "Quote",
+          "placeholder": "e.g. The rapid reporting mocks were the closest thing to the real exam I found — the timer is unforgiving in exactly the right way.",
+          "hint": "Plain text. Trim it to the sentence or two that says something; the full message is still on the lead",
+          "translatable": true,
+          "rules": ["required", "max:1000"]
+        },
+        {
+          "ui": { "type": "field", "cols": 4 },
+          "key": "rating",
+          "type": "select",
+          "label": "Rating",
+          "default": 5,
+          "hint": "Shown as stars. No rating hides them",
+          "options": { "url": "/admin/modules/testimonials/options", "master": "rating" }
+        }
+      ]
+    },
+    {
+      "ui": { "type": "section", "cols": 12, "icon": "tabler-user" },
+      "name": "Who Said It",
+      "subtitle": "The name the candidate is happy to have shown, and a line about them. Ask before publishing a full name.",
+      "elements": [
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "author",
+          "type": "text",
+          "label": "Name",
+          "placeholder": "e.g. Dr A. Rahman",
+          "rules": ["required", "max:120"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "role",
+          "type": "text",
+          "label": "Role or Place",
+          "placeholder": "e.g. ST3 radiology registrar, Leeds",
+          "rules": ["nullable", "max:160"]
+        },
+        {
+          "ui": { "type": "field", "cols": 6 },
+          "key": "lead_id",
+          "type": "number",
+          "label": "Curated From Lead",
+          "placeholder": "Lead ID, if it came through a form",
+          "hint": "The lead under Forms this was taken from, so the original message can be found later. Optional",
+          "rules": ["nullable", "integer", "min:1"]
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "elements": [
+      {
+        "ui": { "type": "row", "dense": true },
+        "elements": [
+          {
+            "ui": { "type": "field" },
+            "key": "status",
+            "type": "select",
+            "label": "Status",
+            "default": "draft",
+            "hint": "Only Published quotes reach the storefront",
+            "options": { "url": "/admin/modules/testimonials/options", "master": "status" },
+            "rules": ["required"]
+          },
+          {
+            "ui": { "type": "field" },
+            "key": "orders",
+            "type": "number",
+            "label": "Order",
+            "default": 0,
+            "hint": "Lower first. Ties show newest first",
+            "rules": ["nullable", "integer", "min:0", "max:9999"]
+          }
+        ]
+      }
+    ],
+    "footer": {
+      "elements": [
+        {
+          "ui": { "type": "row", "dense": true },
+          "elements": [
+            {
+              "ui": { "type": "button", "color": "primary", "icon": "tabler-checkbox" },
+              "action": "save",
+              "label": "Save Changes",
+              "redirect": false
+            },
+            {
+              "ui": { "type": "button", "color": "error", "variant": "tonal", "icon": "tabler-trash" },
+              "action": "delete",
+              "label": "Delete",
+              "redirect": "/module/testimonials"
+            },
+            {
+              "ui": { "type": "button", "color": "secondary", "variant": "tonal", "icon": "tabler-arrow-left" },
+              "action": "cancel",
+              "label": "Cancel",
+              "redirect": "/module/testimonials"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

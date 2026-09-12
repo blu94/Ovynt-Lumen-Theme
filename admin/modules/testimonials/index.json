@@ -1,0 +1,44 @@
+{
+  "expandable": false,
+  "headerActions": {
+    "elements": [
+      {
+        "key": "reload",
+        "ui": { "type": "button", "icon": "tabler-refresh", "color": "success", "rounded": true },
+        "tooltip": "Refresh List",
+        "action": "reload",
+        "class": "ms-2"
+      },
+      {
+        "key": "create",
+        "ui": { "type": "button", "icon": "tabler-plus", "color": "primary", "rounded": "md" },
+        "label": "Add Testimonial",
+        "tooltip": "A quote from a candidate, to publish on the storefront",
+        "action": "navigate",
+        "to": "/module/testimonials/create"
+      }
+    ]
+  },
+  "filters": {
+    "elements": [
+      {
+        "ui": { "type": "field" },
+        "key": "status",
+        "label": "Status",
+        "placeholder": "Any status",
+        "type": "select",
+        "options": { "url": "/admin/modules/testimonials/options", "master": "status" }
+      }
+    ]
+  },
+  "elements": [
+    { "ui": { "type": "display" }, "label": "ID", "key": "id", "sortable": true, "width": "60px" },
+    { "ui": { "type": "display" }, "label": "Author", "key": "author", "sortable": true, "searchable": true },
+    { "ui": { "type": "display" }, "label": "Role", "key": "role", "sortable": false, "searchable": true },
+    { "ui": { "type": "display" }, "label": "Rating", "key": "rating", "sortable": true, "align": "center" },
+    { "ui": { "type": "display" }, "label": "Order", "key": "orders", "sortable": true, "align": "center" },
+    { "ui": { "type": "display" }, "label": "Status", "key": "status", "sortable": false, "align": "center", "type": "status" },
+    { "ui": { "type": "display" }, "label": "Added", "key": "created_at", "sortable": true, "type": "datetime" }
+  ],
+  "actions": { "elements": ["edit", "delete"], "class": "fit" }
+}
