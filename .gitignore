@@ -17,3 +17,7 @@ theme.css.map
 
 # Never belongs in a theme package; the import script excludes it too.
 node_modules/
+
+# Graphify knowledge graph. Regenerated locally from source by
+# `graphify update .`; never a source of truth, and large.
+/graphify-out
