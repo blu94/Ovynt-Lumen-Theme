@@ -21,7 +21,7 @@ Vue-CDN conventions.
 | The exam's own address — `/exam/{slug}`, served through core's `storefront.paths` seam | Built |
 | **Sitting a paper — the server side**: open, progress, end, report, self-mark, switch mode, as six `storefront.actions` | Built, exercised end to end against the running install |
 | **Sitting a paper — the player**: `/exam/{slug}/{paper}`, timer, image viewer, report box, self-marking, mode switch | Built, driven in the browser |
-| Expiry reminders | Declared, not sent — needs a scheduled job |
+| Expiry reminders and the expired-status sweep — `backend/Schedule/EnrolmentExpiry.php`, daily through core's `schedule` seam | Built |
 
 A candidate can buy an exam, be granted access, open it at its own address, sit each paper
 against the clock, and mark themselves against the model answers.

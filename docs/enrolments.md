@@ -61,6 +61,11 @@ staff who can view enrolments that somebody enrolled. Both are ordinary Ovynt no
 candidates can turn theirs off under their own preferences, and the email template is editable
 under **Settings → Mail → Templates** once it has fired once.
 
-**Access ending soon** is declared but is not sent yet — it needs a scheduled job, and the
-scheduler cannot be assumed on shared hosting. On a shared host it runs only if the operator has
-added the single cron line; see the deployment notes in the main README.
+**Access ending soon** goes out once per enrolment, seven days before the window closes, from
+the theme's daily task (`backend/Schedule/EnrolmentExpiry.php`, declared under `schedule` in the
+manifest and run by core's `ovynt:package-tasks`). The same task sets **Expired** on every
+enrolment whose date has passed, so the list stops showing *Active* beside a date last month.
+Both depend on the scheduler: on a containerised install it runs itself; on shared hosting it runs
+only if the operator has added the single cron line, which the Health screen reports on. A
+reminder that has gone is recorded on the enrolment, so a day the scheduler ticks twice cannot
+send it twice.

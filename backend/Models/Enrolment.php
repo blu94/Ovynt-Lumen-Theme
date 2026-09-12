@@ -43,16 +43,18 @@ class Enrolment extends Model
         'order_id',
         'started_at',
         'expires_at',
+        'reminded_at',
         'status',
         'mode',
     ];
 
     protected $casts = [
-        'user_id'    => 'integer',
-        'product_id' => 'integer',
-        'order_id'   => 'integer',
-        'started_at' => 'datetime',
-        'expires_at' => 'datetime',
+        'user_id'     => 'integer',
+        'product_id'  => 'integer',
+        'order_id'    => 'integer',
+        'started_at'  => 'datetime',
+        'expires_at'  => 'datetime',
+        'reminded_at' => 'datetime',
     ];
 
     /** The product this grants access to — the exam itself. */

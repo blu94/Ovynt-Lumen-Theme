@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Ovynt",
   "license": "proprietary",
-  "requires_core": ">=1.3.0 <2.0.0",
+  "requires_core": ">=1.4.1 <2.0.0",
   "preview": "/preview.png",
   "schema_paths": {
     "settings": "admin/settings/index.json",
@@ -26,6 +26,9 @@
       "Theme\\Backend\\Writers\\ExamEnrolmentWriter"
     ]
   },
+  "schedule": [
+    "Theme\\Backend\\Schedule\\EnrolmentExpiry"
+  ],
   "storefront": {
     "paths": [
       { "prefix": "exam", "resolver": "Theme\\Backend\\Storefront\\ExamPath" }

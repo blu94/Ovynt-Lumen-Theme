@@ -35,6 +35,13 @@ return new class extends Migration
             $table->timestamp('started_at')->nullable();
             $table->timestamp('expires_at')->nullable();
 
+            /**
+             * When the "access ending soon" reminder went, or null. Written by the daily
+             * `EnrolmentExpiry` task before it sends, so a scheduler that ticks twice, or a
+             * cache that forgot the last run, cannot send it twice.
+             */
+            $table->timestamp('reminded_at')->nullable();
+
             /** active · complete · expired. Derived by the repository, stored so it can be listed. */
             $table->string('status')->default('active');
 
